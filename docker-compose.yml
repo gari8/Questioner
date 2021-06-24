@@ -2,7 +2,7 @@ version: "3.5"
 services:
   faves-for-api:
     container_name: faves-for-api
-    build: ./server
+    build: .
     tty: true
     restart: always
     volumes:

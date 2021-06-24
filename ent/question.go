@@ -3,9 +3,9 @@
 package ent
 
 import (
+	"faves4/ent/question"
+	"faves4/ent/user"
 	"fmt"
-	"server/ent/question"
-	"server/ent/user"
 	"strings"
 	"time"
 

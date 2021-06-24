@@ -5,12 +5,12 @@ package ent
 import (
 	"context"
 	"errors"
-	"fmt"
-	"math"
 	"faves4/ent/answer"
 	"faves4/ent/predicate"
 	"faves4/ent/question"
 	"faves4/ent/user"
+	"fmt"
+	"math"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"

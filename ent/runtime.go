@@ -3,12 +3,12 @@
 package ent
 
 import (
-	"server/ent/answer"
-	"server/ent/choice"
-	"server/ent/choiceanswer"
-	"server/ent/question"
-	"server/ent/schema"
-	"server/ent/user"
+	"faves4/ent/answer"
+	"faves4/ent/choice"
+	"faves4/ent/choiceanswer"
+	"faves4/ent/question"
+	"faves4/ent/schema"
+	"faves4/ent/user"
 	"time"
 )
 

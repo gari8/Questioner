@@ -1,7 +1,7 @@
 package conf
 
 import (
-	"server/ent"
+	"faves4/ent"
 
 	_ "github.com/lib/pq"
 

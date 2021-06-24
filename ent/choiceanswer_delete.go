@@ -4,9 +4,9 @@ package ent
 
 import (
 	"context"
+	"faves4/ent/choiceanswer"
+	"faves4/ent/predicate"
 	"fmt"
-	"server/ent/choiceanswer"
-	"server/ent/predicate"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"

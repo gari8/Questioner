@@ -2,9 +2,9 @@ package resolvers
 
 import (
 	"context"
+	"faves4/graph/model"
+	"faves4/infrastructure/lib/tools"
 	"fmt"
-	"server/graph/model"
-	"server/infrastructure/lib/tools"
 )
 
 func (r *mutationResolver) CreateQuestion(ctx context.Context, input model.NewQuestion) (*model.Question, error) {

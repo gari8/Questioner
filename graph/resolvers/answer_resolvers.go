@@ -2,8 +2,8 @@ package resolvers
 
 import (
 	"context"
+	"faves4/graph/model"
 	"fmt"
-	"server/graph/model"
 )
 
 func (r *mutationResolver) CreateAnswer(ctx context.Context, input model.NewAnswer) (bool, error) {

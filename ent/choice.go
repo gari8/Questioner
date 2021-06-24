@@ -3,9 +3,9 @@
 package ent
 
 import (
-	"fmt"
 	"faves4/ent/choice"
 	"faves4/ent/question"
+	"fmt"
 	"strings"
 
 	"entgo.io/ent/dialect/sql"

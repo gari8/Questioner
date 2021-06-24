@@ -5,11 +5,11 @@ package ent
 import (
 	"context"
 	"errors"
+	"faves4/ent/answer"
+	"faves4/ent/choiceanswer"
+	"faves4/ent/question"
+	"faves4/ent/user"
 	"fmt"
-	"server/ent/answer"
-	"server/ent/choiceanswer"
-	"server/ent/question"
-	"server/ent/user"
 	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"

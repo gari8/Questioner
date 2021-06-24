@@ -5,8 +5,8 @@ package resolvers
 
 import (
 	"context"
+	"faves4/graph/generated"
 	"fmt"
-	"server/graph/generated"
 
 	"github.com/99designs/gqlgen/graphql/introspection"
 )

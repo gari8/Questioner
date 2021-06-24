@@ -6,8 +6,8 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"faves4/graph/model"
 	"fmt"
-	"server/graph/model"
 	"strconv"
 	"sync"
 	"sync/atomic"
@@ -787,7 +787,7 @@ func (ec *executionContext) field_Mutation_createAnswer_args(ctx context.Context
 	var arg0 model.NewAnswer
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNNewAnswer2serverᚋgraphᚋmodelᚐNewAnswer(ctx, tmp)
+		arg0, err = ec.unmarshalNNewAnswer2faves4ᚋgraphᚋmodelᚐNewAnswer(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -802,7 +802,7 @@ func (ec *executionContext) field_Mutation_createQuestion_args(ctx context.Conte
 	var arg0 model.NewQuestion
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNNewQuestion2serverᚋgraphᚋmodelᚐNewQuestion(ctx, tmp)
+		arg0, err = ec.unmarshalNNewQuestion2faves4ᚋgraphᚋmodelᚐNewQuestion(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -817,7 +817,7 @@ func (ec *executionContext) field_Mutation_createSession_args(ctx context.Contex
 	var arg0 *model.LoginInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalOLoginInput2ᚖserverᚋgraphᚋmodelᚐLoginInput(ctx, tmp)
+		arg0, err = ec.unmarshalOLoginInput2ᚖfaves4ᚋgraphᚋmodelᚐLoginInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -832,7 +832,7 @@ func (ec *executionContext) field_Mutation_createUser_args(ctx context.Context, 
 	var arg0 model.NewUser
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNNewUser2serverᚋgraphᚋmodelᚐNewUser(ctx, tmp)
+		arg0, err = ec.unmarshalNNewUser2faves4ᚋgraphᚋmodelᚐNewUser(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -871,7 +871,7 @@ func (ec *executionContext) field_Mutation_editQuestion_args(ctx context.Context
 	var arg0 model.EditQuestion
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNEditQuestion2serverᚋgraphᚋmodelᚐEditQuestion(ctx, tmp)
+		arg0, err = ec.unmarshalNEditQuestion2faves4ᚋgraphᚋmodelᚐEditQuestion(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -886,7 +886,7 @@ func (ec *executionContext) field_Mutation_editUser_args(ctx context.Context, ra
 	var arg0 model.EditUser
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNEditUser2serverᚋgraphᚋmodelᚐEditUser(ctx, tmp)
+		arg0, err = ec.unmarshalNEditUser2faves4ᚋgraphᚋmodelᚐEditUser(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1108,7 +1108,7 @@ func (ec *executionContext) _Answer_user(ctx context.Context, field graphql.Coll
 	}
 	res := resTmp.(*model.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖserverᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖfaves4ᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Answer_question(ctx context.Context, field graphql.CollectedField, obj *model.Answer) (ret graphql.Marshaler) {
@@ -1143,7 +1143,7 @@ func (ec *executionContext) _Answer_question(ctx context.Context, field graphql.
 	}
 	res := resTmp.(*model.Question)
 	fc.Result = res
-	return ec.marshalNQuestion2ᚖserverᚋgraphᚋmodelᚐQuestion(ctx, field.Selections, res)
+	return ec.marshalNQuestion2ᚖfaves4ᚋgraphᚋmodelᚐQuestion(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Answer_content(ctx context.Context, field graphql.CollectedField, obj *model.Answer) (ret graphql.Marshaler) {
@@ -1379,7 +1379,7 @@ func (ec *executionContext) _Choice_question(ctx context.Context, field graphql.
 	}
 	res := resTmp.(*model.Question)
 	fc.Result = res
-	return ec.marshalNQuestion2ᚖserverᚋgraphᚋmodelᚐQuestion(ctx, field.Selections, res)
+	return ec.marshalNQuestion2ᚖfaves4ᚋgraphᚋmodelᚐQuestion(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_createUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1421,7 +1421,7 @@ func (ec *executionContext) _Mutation_createUser(ctx context.Context, field grap
 	}
 	res := resTmp.(*model.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖserverᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖfaves4ᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_createSession(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1505,7 +1505,7 @@ func (ec *executionContext) _Mutation_editUser(ctx context.Context, field graphq
 	}
 	res := resTmp.(*model.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖserverᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖfaves4ᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_editPassword(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1589,7 +1589,7 @@ func (ec *executionContext) _Mutation_createQuestion(ctx context.Context, field 
 	}
 	res := resTmp.(*model.Question)
 	fc.Result = res
-	return ec.marshalNQuestion2ᚖserverᚋgraphᚋmodelᚐQuestion(ctx, field.Selections, res)
+	return ec.marshalNQuestion2ᚖfaves4ᚋgraphᚋmodelᚐQuestion(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_editQuestion(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1715,7 +1715,7 @@ func (ec *executionContext) _Query_users(ctx context.Context, field graphql.Coll
 	}
 	res := resTmp.([]*model.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚕᚖserverᚋgraphᚋmodelᚐUserᚄ(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚕᚖfaves4ᚋgraphᚋmodelᚐUserᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_findUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1757,7 +1757,7 @@ func (ec *executionContext) _Query_findUser(ctx context.Context, field graphql.C
 	}
 	res := resTmp.(*model.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖserverᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖfaves4ᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_confirmToken(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1792,7 +1792,7 @@ func (ec *executionContext) _Query_confirmToken(ctx context.Context, field graph
 	}
 	res := resTmp.(*model.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖserverᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖfaves4ᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_questions(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1834,7 +1834,7 @@ func (ec *executionContext) _Query_questions(ctx context.Context, field graphql.
 	}
 	res := resTmp.([]*model.Question)
 	fc.Result = res
-	return ec.marshalNQuestion2ᚕᚖserverᚋgraphᚋmodelᚐQuestionᚄ(ctx, field.Selections, res)
+	return ec.marshalNQuestion2ᚕᚖfaves4ᚋgraphᚋmodelᚐQuestionᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_findQuestion(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1876,7 +1876,7 @@ func (ec *executionContext) _Query_findQuestion(ctx context.Context, field graph
 	}
 	res := resTmp.(*model.Question)
 	fc.Result = res
-	return ec.marshalNQuestion2ᚖserverᚋgraphᚋmodelᚐQuestion(ctx, field.Selections, res)
+	return ec.marshalNQuestion2ᚖfaves4ᚋgraphᚋmodelᚐQuestion(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_findAnswer(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1918,7 +1918,7 @@ func (ec *executionContext) _Query_findAnswer(ctx context.Context, field graphql
 	}
 	res := resTmp.(*model.Answer)
 	fc.Result = res
-	return ec.marshalNAnswer2ᚖserverᚋgraphᚋmodelᚐAnswer(ctx, field.Selections, res)
+	return ec.marshalNAnswer2ᚖfaves4ᚋgraphᚋmodelᚐAnswer(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2126,7 +2126,7 @@ func (ec *executionContext) _Question_answers(ctx context.Context, field graphql
 	}
 	res := resTmp.([]*model.Answer)
 	fc.Result = res
-	return ec.marshalOAnswer2ᚕᚖserverᚋgraphᚋmodelᚐAnswerᚄ(ctx, field.Selections, res)
+	return ec.marshalOAnswer2ᚕᚖfaves4ᚋgraphᚋmodelᚐAnswerᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Question_content(ctx context.Context, field graphql.CollectedField, obj *model.Question) (ret graphql.Marshaler) {
@@ -2391,7 +2391,7 @@ func (ec *executionContext) _Question_choices(ctx context.Context, field graphql
 	}
 	res := resTmp.([]*model.Choice)
 	fc.Result = res
-	return ec.marshalOChoice2ᚕᚖserverᚋgraphᚋmodelᚐChoiceᚄ(ctx, field.Selections, res)
+	return ec.marshalOChoice2ᚕᚖfaves4ᚋgraphᚋmodelᚐChoiceᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Question_answered(ctx context.Context, field graphql.CollectedField, obj *model.Question) (ret graphql.Marshaler) {
@@ -2461,7 +2461,7 @@ func (ec *executionContext) _Question_user(ctx context.Context, field graphql.Co
 	}
 	res := resTmp.(*model.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖserverᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖfaves4ᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Question_answerers(ctx context.Context, field graphql.CollectedField, obj *model.Question) (ret graphql.Marshaler) {
@@ -2493,7 +2493,7 @@ func (ec *executionContext) _Question_answerers(ctx context.Context, field graph
 	}
 	res := resTmp.([]*model.User)
 	fc.Result = res
-	return ec.marshalOUser2ᚕᚖserverᚋgraphᚋmodelᚐUserᚄ(ctx, field.Selections, res)
+	return ec.marshalOUser2ᚕᚖfaves4ᚋgraphᚋmodelᚐUserᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Question_created_at(ctx context.Context, field graphql.CollectedField, obj *model.Question) (ret graphql.Marshaler) {
@@ -2851,7 +2851,7 @@ func (ec *executionContext) _User_answers(ctx context.Context, field graphql.Col
 	}
 	res := resTmp.([]*model.Answer)
 	fc.Result = res
-	return ec.marshalOAnswer2ᚕᚖserverᚋgraphᚋmodelᚐAnswerᚄ(ctx, field.Selections, res)
+	return ec.marshalOAnswer2ᚕᚖfaves4ᚋgraphᚋmodelᚐAnswerᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _User_questions(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
@@ -2883,7 +2883,7 @@ func (ec *executionContext) _User_questions(ctx context.Context, field graphql.C
 	}
 	res := resTmp.([]*model.Question)
 	fc.Result = res
-	return ec.marshalOQuestion2ᚕᚖserverᚋgraphᚋmodelᚐQuestionᚄ(ctx, field.Selections, res)
+	return ec.marshalOQuestion2ᚕᚖfaves4ᚋgraphᚋmodelᚐQuestionᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _User_created_at(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
@@ -4118,7 +4118,7 @@ func (ec *executionContext) unmarshalInputEditQuestion(ctx context.Context, obj 
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("answerType"))
-			it.AnswerType, err = ec.unmarshalNAnswerType2serverᚋgraphᚋmodelᚐAnswerType(ctx, v)
+			it.AnswerType, err = ec.unmarshalNAnswerType2faves4ᚋgraphᚋmodelᚐAnswerType(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4310,7 +4310,7 @@ func (ec *executionContext) unmarshalInputNewQuestion(ctx context.Context, obj i
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("answerType"))
-			it.AnswerType, err = ec.unmarshalNAnswerType2serverᚋgraphᚋmodelᚐAnswerType(ctx, v)
+			it.AnswerType, err = ec.unmarshalNAnswerType2faves4ᚋgraphᚋmodelᚐAnswerType(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4358,7 +4358,7 @@ func (ec *executionContext) unmarshalInputNewQuestion(ctx context.Context, obj i
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("choices"))
-			it.Choices, err = ec.unmarshalOChoiceInput2ᚕᚖserverᚋgraphᚋmodelᚐChoiceInputᚄ(ctx, v)
+			it.Choices, err = ec.unmarshalOChoiceInput2ᚕᚖfaves4ᚋgraphᚋmodelᚐChoiceInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -5086,11 +5086,11 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 
 // region    ***************************** type.gotpl *****************************
 
-func (ec *executionContext) marshalNAnswer2serverᚋgraphᚋmodelᚐAnswer(ctx context.Context, sel ast.SelectionSet, v model.Answer) graphql.Marshaler {
+func (ec *executionContext) marshalNAnswer2faves4ᚋgraphᚋmodelᚐAnswer(ctx context.Context, sel ast.SelectionSet, v model.Answer) graphql.Marshaler {
 	return ec._Answer(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNAnswer2ᚖserverᚋgraphᚋmodelᚐAnswer(ctx context.Context, sel ast.SelectionSet, v *model.Answer) graphql.Marshaler {
+func (ec *executionContext) marshalNAnswer2ᚖfaves4ᚋgraphᚋmodelᚐAnswer(ctx context.Context, sel ast.SelectionSet, v *model.Answer) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -5100,13 +5100,13 @@ func (ec *executionContext) marshalNAnswer2ᚖserverᚋgraphᚋmodelᚐAnswer(ct
 	return ec._Answer(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNAnswerType2serverᚋgraphᚋmodelᚐAnswerType(ctx context.Context, v interface{}) (model.AnswerType, error) {
+func (ec *executionContext) unmarshalNAnswerType2faves4ᚋgraphᚋmodelᚐAnswerType(ctx context.Context, v interface{}) (model.AnswerType, error) {
 	var res model.AnswerType
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNAnswerType2serverᚋgraphᚋmodelᚐAnswerType(ctx context.Context, sel ast.SelectionSet, v model.AnswerType) graphql.Marshaler {
+func (ec *executionContext) marshalNAnswerType2faves4ᚋgraphᚋmodelᚐAnswerType(ctx context.Context, sel ast.SelectionSet, v model.AnswerType) graphql.Marshaler {
 	return v
 }
 
@@ -5125,7 +5125,7 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
-func (ec *executionContext) marshalNChoice2ᚖserverᚋgraphᚋmodelᚐChoice(ctx context.Context, sel ast.SelectionSet, v *model.Choice) graphql.Marshaler {
+func (ec *executionContext) marshalNChoice2ᚖfaves4ᚋgraphᚋmodelᚐChoice(ctx context.Context, sel ast.SelectionSet, v *model.Choice) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -5135,17 +5135,17 @@ func (ec *executionContext) marshalNChoice2ᚖserverᚋgraphᚋmodelᚐChoice(ct
 	return ec._Choice(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNChoiceInput2ᚖserverᚋgraphᚋmodelᚐChoiceInput(ctx context.Context, v interface{}) (*model.ChoiceInput, error) {
+func (ec *executionContext) unmarshalNChoiceInput2ᚖfaves4ᚋgraphᚋmodelᚐChoiceInput(ctx context.Context, v interface{}) (*model.ChoiceInput, error) {
 	res, err := ec.unmarshalInputChoiceInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNEditQuestion2serverᚋgraphᚋmodelᚐEditQuestion(ctx context.Context, v interface{}) (model.EditQuestion, error) {
+func (ec *executionContext) unmarshalNEditQuestion2faves4ᚋgraphᚋmodelᚐEditQuestion(ctx context.Context, v interface{}) (model.EditQuestion, error) {
 	res, err := ec.unmarshalInputEditQuestion(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNEditUser2serverᚋgraphᚋmodelᚐEditUser(ctx context.Context, v interface{}) (model.EditUser, error) {
+func (ec *executionContext) unmarshalNEditUser2faves4ᚋgraphᚋmodelᚐEditUser(ctx context.Context, v interface{}) (model.EditUser, error) {
 	res, err := ec.unmarshalInputEditUser(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
@@ -5180,26 +5180,26 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
-func (ec *executionContext) unmarshalNNewAnswer2serverᚋgraphᚋmodelᚐNewAnswer(ctx context.Context, v interface{}) (model.NewAnswer, error) {
+func (ec *executionContext) unmarshalNNewAnswer2faves4ᚋgraphᚋmodelᚐNewAnswer(ctx context.Context, v interface{}) (model.NewAnswer, error) {
 	res, err := ec.unmarshalInputNewAnswer(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNNewQuestion2serverᚋgraphᚋmodelᚐNewQuestion(ctx context.Context, v interface{}) (model.NewQuestion, error) {
+func (ec *executionContext) unmarshalNNewQuestion2faves4ᚋgraphᚋmodelᚐNewQuestion(ctx context.Context, v interface{}) (model.NewQuestion, error) {
 	res, err := ec.unmarshalInputNewQuestion(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNNewUser2serverᚋgraphᚋmodelᚐNewUser(ctx context.Context, v interface{}) (model.NewUser, error) {
+func (ec *executionContext) unmarshalNNewUser2faves4ᚋgraphᚋmodelᚐNewUser(ctx context.Context, v interface{}) (model.NewUser, error) {
 	res, err := ec.unmarshalInputNewUser(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNQuestion2serverᚋgraphᚋmodelᚐQuestion(ctx context.Context, sel ast.SelectionSet, v model.Question) graphql.Marshaler {
+func (ec *executionContext) marshalNQuestion2faves4ᚋgraphᚋmodelᚐQuestion(ctx context.Context, sel ast.SelectionSet, v model.Question) graphql.Marshaler {
 	return ec._Question(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNQuestion2ᚕᚖserverᚋgraphᚋmodelᚐQuestionᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Question) graphql.Marshaler {
+func (ec *executionContext) marshalNQuestion2ᚕᚖfaves4ᚋgraphᚋmodelᚐQuestionᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Question) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -5223,7 +5223,7 @@ func (ec *executionContext) marshalNQuestion2ᚕᚖserverᚋgraphᚋmodelᚐQues
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNQuestion2ᚖserverᚋgraphᚋmodelᚐQuestion(ctx, sel, v[i])
+			ret[i] = ec.marshalNQuestion2ᚖfaves4ᚋgraphᚋmodelᚐQuestion(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -5236,7 +5236,7 @@ func (ec *executionContext) marshalNQuestion2ᚕᚖserverᚋgraphᚋmodelᚐQues
 	return ret
 }
 
-func (ec *executionContext) marshalNQuestion2ᚖserverᚋgraphᚋmodelᚐQuestion(ctx context.Context, sel ast.SelectionSet, v *model.Question) graphql.Marshaler {
+func (ec *executionContext) marshalNQuestion2ᚖfaves4ᚋgraphᚋmodelᚐQuestion(ctx context.Context, sel ast.SelectionSet, v *model.Question) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -5276,11 +5276,11 @@ func (ec *executionContext) marshalNUpload2githubᚗcomᚋ99designsᚋgqlgenᚋg
 	return res
 }
 
-func (ec *executionContext) marshalNUser2serverᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v model.User) graphql.Marshaler {
+func (ec *executionContext) marshalNUser2faves4ᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v model.User) graphql.Marshaler {
 	return ec._User(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNUser2ᚕᚖserverᚋgraphᚋmodelᚐUserᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.User) graphql.Marshaler {
+func (ec *executionContext) marshalNUser2ᚕᚖfaves4ᚋgraphᚋmodelᚐUserᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.User) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -5304,7 +5304,7 @@ func (ec *executionContext) marshalNUser2ᚕᚖserverᚋgraphᚋmodelᚐUserᚄ(
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNUser2ᚖserverᚋgraphᚋmodelᚐUser(ctx, sel, v[i])
+			ret[i] = ec.marshalNUser2ᚖfaves4ᚋgraphᚋmodelᚐUser(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -5317,7 +5317,7 @@ func (ec *executionContext) marshalNUser2ᚕᚖserverᚋgraphᚋmodelᚐUserᚄ(
 	return ret
 }
 
-func (ec *executionContext) marshalNUser2ᚖserverᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v *model.User) graphql.Marshaler {
+func (ec *executionContext) marshalNUser2ᚖfaves4ᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v *model.User) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -5556,7 +5556,7 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 	return res
 }
 
-func (ec *executionContext) marshalOAnswer2ᚕᚖserverᚋgraphᚋmodelᚐAnswerᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Answer) graphql.Marshaler {
+func (ec *executionContext) marshalOAnswer2ᚕᚖfaves4ᚋgraphᚋmodelᚐAnswerᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Answer) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -5583,7 +5583,7 @@ func (ec *executionContext) marshalOAnswer2ᚕᚖserverᚋgraphᚋmodelᚐAnswer
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNAnswer2ᚖserverᚋgraphᚋmodelᚐAnswer(ctx, sel, v[i])
+			ret[i] = ec.marshalNAnswer2ᚖfaves4ᚋgraphᚋmodelᚐAnswer(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -5620,7 +5620,7 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return graphql.MarshalBoolean(*v)
 }
 
-func (ec *executionContext) marshalOChoice2ᚕᚖserverᚋgraphᚋmodelᚐChoiceᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Choice) graphql.Marshaler {
+func (ec *executionContext) marshalOChoice2ᚕᚖfaves4ᚋgraphᚋmodelᚐChoiceᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Choice) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -5647,7 +5647,7 @@ func (ec *executionContext) marshalOChoice2ᚕᚖserverᚋgraphᚋmodelᚐChoice
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNChoice2ᚖserverᚋgraphᚋmodelᚐChoice(ctx, sel, v[i])
+			ret[i] = ec.marshalNChoice2ᚖfaves4ᚋgraphᚋmodelᚐChoice(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -5660,7 +5660,7 @@ func (ec *executionContext) marshalOChoice2ᚕᚖserverᚋgraphᚋmodelᚐChoice
 	return ret
 }
 
-func (ec *executionContext) unmarshalOChoiceInput2ᚕᚖserverᚋgraphᚋmodelᚐChoiceInputᚄ(ctx context.Context, v interface{}) ([]*model.ChoiceInput, error) {
+func (ec *executionContext) unmarshalOChoiceInput2ᚕᚖfaves4ᚋgraphᚋmodelᚐChoiceInputᚄ(ctx context.Context, v interface{}) ([]*model.ChoiceInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -5676,7 +5676,7 @@ func (ec *executionContext) unmarshalOChoiceInput2ᚕᚖserverᚋgraphᚋmodel�
 	res := make([]*model.ChoiceInput, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNChoiceInput2ᚖserverᚋgraphᚋmodelᚐChoiceInput(ctx, vSlice[i])
+		res[i], err = ec.unmarshalNChoiceInput2ᚖfaves4ᚋgraphᚋmodelᚐChoiceInput(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -5699,7 +5699,7 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 	return graphql.MarshalInt(*v)
 }
 
-func (ec *executionContext) unmarshalOLoginInput2ᚖserverᚋgraphᚋmodelᚐLoginInput(ctx context.Context, v interface{}) (*model.LoginInput, error) {
+func (ec *executionContext) unmarshalOLoginInput2ᚖfaves4ᚋgraphᚋmodelᚐLoginInput(ctx context.Context, v interface{}) (*model.LoginInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -5707,7 +5707,7 @@ func (ec *executionContext) unmarshalOLoginInput2ᚖserverᚋgraphᚋmodelᚐLog
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOQuestion2ᚕᚖserverᚋgraphᚋmodelᚐQuestionᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Question) graphql.Marshaler {
+func (ec *executionContext) marshalOQuestion2ᚕᚖfaves4ᚋgraphᚋmodelᚐQuestionᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Question) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -5734,7 +5734,7 @@ func (ec *executionContext) marshalOQuestion2ᚕᚖserverᚋgraphᚋmodelᚐQues
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNQuestion2ᚖserverᚋgraphᚋmodelᚐQuestion(ctx, sel, v[i])
+			ret[i] = ec.marshalNQuestion2ᚖfaves4ᚋgraphᚋmodelᚐQuestion(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -5786,7 +5786,7 @@ func (ec *executionContext) marshalOUpload2ᚖgithubᚗcomᚋ99designsᚋgqlgen�
 	return graphql.MarshalUpload(*v)
 }
 
-func (ec *executionContext) marshalOUser2ᚕᚖserverᚋgraphᚋmodelᚐUserᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.User) graphql.Marshaler {
+func (ec *executionContext) marshalOUser2ᚕᚖfaves4ᚋgraphᚋmodelᚐUserᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.User) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -5813,7 +5813,7 @@ func (ec *executionContext) marshalOUser2ᚕᚖserverᚋgraphᚋmodelᚐUserᚄ(
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNUser2ᚖserverᚋgraphᚋmodelᚐUser(ctx, sel, v[i])
+			ret[i] = ec.marshalNUser2ᚖfaves4ᚋgraphᚋmodelᚐUser(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)

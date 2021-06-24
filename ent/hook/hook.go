@@ -4,8 +4,8 @@ package hook
 
 import (
 	"context"
+	"faves4/ent"
 	"fmt"
-	"server/ent"
 )
 
 // The AnswerFunc type is an adapter to allow the use of ordinary

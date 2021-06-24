@@ -4,9 +4,9 @@ package enttest
 
 import (
 	"context"
-	"server/ent"
+	"faves4/ent"
 	// required by schema hooks.
-	_ "server/ent/runtime"
+	_ "faves4/ent/runtime"
 
 	"entgo.io/ent/dialect/sql/schema"
 )

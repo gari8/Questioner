@@ -3,7 +3,7 @@
 package choiceanswer
 
 import (
-	"server/ent/predicate"
+	"faves4/ent/predicate"
 	"time"
 
 	"entgo.io/ent/dialect/sql"

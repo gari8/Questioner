@@ -3,11 +3,11 @@ package resolvers
 import (
 	"context"
 	"errors"
+	"faves4/ent/user"
+	"faves4/graph/model"
+	"faves4/infrastructure/auth"
+	"faves4/infrastructure/lib/tools"
 	"fmt"
-	"server/ent/user"
-	"server/graph/model"
-	"server/infrastructure/auth"
-	"server/infrastructure/lib/tools"
 	"time"
 )
 

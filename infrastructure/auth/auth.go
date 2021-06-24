@@ -2,9 +2,9 @@ package auth
 
 import (
 	"context"
+	"faves4/ent"
+	"faves4/graph/model"
 	"net/http"
-	"server/ent"
-	"server/graph/model"
 )
 
 const UserCtxKey = "userToken"

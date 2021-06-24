@@ -7,13 +7,13 @@ import (
 	"fmt"
 	"log"
 
-	"server/ent/migrate"
+	"faves4/ent/migrate"
 
-	"server/ent/answer"
-	"server/ent/choice"
-	"server/ent/choiceanswer"
-	"server/ent/question"
-	"server/ent/user"
+	"faves4/ent/answer"
+	"faves4/ent/choice"
+	"faves4/ent/choiceanswer"
+	"faves4/ent/question"
+	"faves4/ent/user"
 
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"

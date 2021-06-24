@@ -4,12 +4,12 @@ package ent
 
 import (
 	"context"
+	"faves4/ent/answer"
+	"faves4/ent/choice"
+	"faves4/ent/predicate"
+	"faves4/ent/question"
+	"faves4/ent/user"
 	"fmt"
-	"server/ent/answer"
-	"server/ent/choice"
-	"server/ent/predicate"
-	"server/ent/question"
-	"server/ent/user"
 	"time"
 
 	"entgo.io/ent/dialect/sql"

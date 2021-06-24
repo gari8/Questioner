@@ -1,8 +1,8 @@
 package resolvers
 
 import (
-	"server/ent"
-	"server/graph/generated"
+	"faves4/ent"
+	"faves4/graph/generated"
 )
 
 // This file will not be regenerated automatically.
