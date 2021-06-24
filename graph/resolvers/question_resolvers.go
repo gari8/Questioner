@@ -1,0 +1,71 @@
+package resolvers
+
+import (
+	"context"
+	"fmt"
+	"server/graph/model"
+	"server/infrastructure/lib/tools"
+)
+
+func (r *mutationResolver) CreateQuestion(ctx context.Context, input model.NewQuestion) (*model.Question, error) {
+	uu, err := tools.CreateId()
+	if err != nil { return nil, err }
+	qs, err := r.DB.Question.Create().SetID(*uu).SetOwnerID(input.UserID).SetTitle(input.Title).SetContent(input.Content).SetTextAfterAnswered(*input.TextAfterAnswered).SetAnswerType(input.AnswerType.String()).SetEnabled(input.Enabled).Save(ctx)
+	if err != nil { return nil, err }
+	qt, err := tools.CastQuestion(ctx, qs)
+	if err != nil { return nil, err }
+	if input.AnswerType == model.AnswerTypeSelect {
+		var choices []*model.Choice
+		for _, cc := range input.Choices {
+			ct, err := r.DB.Choice.Create().SetParentID(qs.ID).SetContent(cc.Content).Save(ctx)
+			if err != nil { continue }
+			c, err := tools.CastChoice(ctx, ct)
+			if err != nil { continue }
+			choices = append(choices, c)
+		}
+		qt.Choices = choices
+	}
+	return qt, nil
+}
+
+func (r *mutationResolver) EditQuestion(ctx context.Context, input model.EditQuestion) (bool, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *queryResolver) Questions(ctx context.Context, limit *int, offset *int) ([]*model.Question, error) {
+	qAll, err := r.DB.Question.Query().Offset(*offset).Limit(*limit).All(ctx)
+	if err != nil { return nil, err }
+	var qs []*model.Question
+	for _, qt := range qAll {
+		q, err := tools.CastQuestion(ctx, qt)
+		if err != nil { continue }
+		qs = append(qs, q)
+	}
+	return qs, nil
+}
+
+func (r *queryResolver) FindQuestion(ctx context.Context, id string) (*model.Question, error) {
+	qt, err := r.DB.Question.Get(ctx, id)
+	if err != nil { return nil, err }
+	q, err := tools.CastQuestion(ctx, qt)
+	if err != nil { return nil, err }
+	aAll, err := qt.QueryAnswers().All(ctx)
+	if err != nil { return nil, err }
+	cAll, err := qt.QueryChoices().All(ctx)
+	if err != nil { return nil, err }
+	var answers []*model.Answer
+	var choices []*model.Choice
+	for _, ans := range aAll {
+		a, err := tools.CastAnswer(ctx, ans)
+		if err != nil { continue }
+		answers = append(answers, a)
+	}
+	for _, choice := range cAll {
+		c, err := tools.CastChoice(ctx, choice)
+		if err != nil { continue }
+		choices = append(choices, c)
+	}
+	q.Answers = answers
+	q.Choices = choices
+	return q, nil
+}
