@@ -46,7 +46,25 @@ func main() {
 		log.Fatalf("failed creating schema resources: %v", err)
 	}
 
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &resolvers.Resolver{DB: client}}))
+	usePlayGround := true
+
+	router := chi.NewRouter()
+
+	acceptOrigins := []string{
+		"http://localhost:3000",
+	}
+
+	router.Use(cors.New(cors.Options{
+		AllowedOrigins:   acceptOrigins,
+		AllowCredentials: true,
+		AllowedMethods:   []string{"GET", "POST", "PUT", "HEAD", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		Debug:            true,
+	}).Handler)
+
+	router.Use(auth.Middleware(ctx, client))
+
+	srv := handler.New(generated.NewExecutableSchema(generated.Config{Resolvers: &resolvers.Resolver{DB: client}}))
 
 	srv.AddTransport(&transport.Websocket{
 		Upgrader: websocket.Upgrader{
@@ -59,17 +77,10 @@ func main() {
 		},
 	})
 
-	usePlayGround := true
-
-	router := chi.NewRouter()
-
-	router.Use(cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"},
-		AllowCredentials: true,
-		Debug:            true,
-	}).Handler)
-
-	router.Use(auth.Middleware(ctx, client))
+	srv.AddTransport(transport.Options{})
+	srv.AddTransport(transport.GET{})
+	srv.AddTransport(transport.POST{})
+	srv.AddTransport(transport.MultipartForm{})
 
 	router.Group(func(r chi.Router) {
 		r.Handle("/query", srv)
