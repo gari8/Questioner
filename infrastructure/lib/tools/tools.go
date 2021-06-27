@@ -2,11 +2,11 @@ package tools
 
 import (
 	"context"
+	"faves4/ent"
+	"faves4/graph/model"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"os"
-	"faves4/ent"
-	"faves4/graph/model"
 	"strings"
 	"time"
 )
@@ -33,9 +33,9 @@ func DigestWord(word string) (string, error) {
 func CompareHashAndPlane(hash string, plane string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(plane))
 	if err != nil {
-		return true
+		return false
 	}
-	return false
+	return true
 }
 
 func GetEnv(key, defaultValue string) string {
@@ -50,6 +50,13 @@ func ConvertStringToTime(timeString string) (*time.Time, error) {
 	t, err := time.Parse(TimeLayout, timeString)
 	if err != nil { return nil, err }
 	return &t, nil
+}
+
+func ContainsUserIdInAnswers(answers []*model.Answer, userId string) bool {
+	for _, ans := range answers {
+		if ans.User.ID == userId { return true }
+	}
+	return false
 }
 
 func CastUser(u *ent.User) *model.User {

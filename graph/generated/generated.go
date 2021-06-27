@@ -74,7 +74,7 @@ type ComplexityRoot struct {
 	Query struct {
 		ConfirmToken func(childComplexity int) int
 		FindAnswer   func(childComplexity int, id string) int
-		FindQuestion func(childComplexity int, id string) int
+		FindQuestion func(childComplexity int, id string, userID *string) int
 		FindUser     func(childComplexity int, id string) int
 		Questions    func(childComplexity int, limit *int, offset *int) int
 		Users        func(childComplexity int, limit *int, offset *int) int
@@ -130,7 +130,7 @@ type QueryResolver interface {
 	FindUser(ctx context.Context, id string) (*model.User, error)
 	ConfirmToken(ctx context.Context) (*model.User, error)
 	Questions(ctx context.Context, limit *int, offset *int) ([]*model.Question, error)
-	FindQuestion(ctx context.Context, id string) (*model.Question, error)
+	FindQuestion(ctx context.Context, id string, userID *string) (*model.Question, error)
 	FindAnswer(ctx context.Context, id string) (*model.Answer, error)
 }
 type DirectiveResolver interface {
@@ -335,7 +335,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.FindQuestion(childComplexity, args["id"].(string)), true
+		return e.complexity.Query.FindQuestion(childComplexity, args["id"].(string), args["userId"].(*string)), true
 
 	case "Query.findUser":
 		if e.complexity.Query.FindUser == nil {
@@ -705,7 +705,7 @@ type Query {
   findUser(id: ID!): User!
   confirmToken: User!
   questions(limit: Int = 12, offset: Int = 0): [Question!]!
-  findQuestion(id: ID!): Question!
+  findQuestion(id: ID!, userId: ID): Question!
   findAnswer(id: ID!): Answer!
 }
 
@@ -719,7 +719,7 @@ input EditUser {
   id: ID!
   username: String!
   email: String!
-  icon: Upload!
+  icon: Upload
   description: String!
 }
 
@@ -759,6 +759,9 @@ input EditQuestion {
 
 input NewAnswer {
   userId: ID!
+  questionId: ID!
+  answerType: AnswerType!
+  choiceId: Int
   value: String
   file: Upload
 }
@@ -937,6 +940,15 @@ func (ec *executionContext) field_Query_findQuestion_args(ctx context.Context, r
 		}
 	}
 	args["id"] = arg0
+	var arg1 *string
+	if tmp, ok := rawArgs["userId"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userId"))
+		arg1, err = ec.unmarshalOID2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["userId"] = arg1
 	return args, nil
 }
 
@@ -1862,7 +1874,7 @@ func (ec *executionContext) _Query_findQuestion(ctx context.Context, field graph
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().FindQuestion(rctx, args["id"].(string))
+		return ec.resolvers.Query().FindQuestion(rctx, args["id"].(string), args["userId"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4194,7 +4206,7 @@ func (ec *executionContext) unmarshalInputEditUser(ctx context.Context, obj inte
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("icon"))
-			it.Icon, err = ec.unmarshalNUpload2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUpload(ctx, v)
+			it.Icon, err = ec.unmarshalOUpload2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUpload(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4251,6 +4263,30 @@ func (ec *executionContext) unmarshalInputNewAnswer(ctx context.Context, obj int
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userId"))
 			it.UserID, err = ec.unmarshalNID2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "questionId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("questionId"))
+			it.QuestionID, err = ec.unmarshalNID2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "answerType":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("answerType"))
+			it.AnswerType, err = ec.unmarshalNAnswerType2faves4ᚋgraphᚋmodelᚐAnswerType(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "choiceId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("choiceId"))
+			it.ChoiceID, err = ec.unmarshalOInt2ᚖint(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -5261,21 +5297,6 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 	return res
 }
 
-func (ec *executionContext) unmarshalNUpload2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUpload(ctx context.Context, v interface{}) (graphql.Upload, error) {
-	res, err := graphql.UnmarshalUpload(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNUpload2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUpload(ctx context.Context, sel ast.SelectionSet, v graphql.Upload) graphql.Marshaler {
-	res := graphql.MarshalUpload(v)
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-	}
-	return res
-}
-
 func (ec *executionContext) marshalNUser2faves4ᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v model.User) graphql.Marshaler {
 	return ec._User(ctx, sel, &v)
 }
@@ -5682,6 +5703,21 @@ func (ec *executionContext) unmarshalOChoiceInput2ᚕᚖfaves4ᚋgraphᚋmodel�
 		}
 	}
 	return res, nil
+}
+
+func (ec *executionContext) unmarshalOID2ᚖstring(ctx context.Context, v interface{}) (*string, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := graphql.UnmarshalID(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOID2ᚖstring(ctx context.Context, sel ast.SelectionSet, v *string) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return graphql.MarshalID(*v)
 }
 
 func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v interface{}) (*int, error) {

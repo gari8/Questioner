@@ -45,11 +45,11 @@ type EditQuestion struct {
 }
 
 type EditUser struct {
-	ID          string         `json:"id"`
-	Username    string         `json:"username"`
-	Email       string         `json:"email"`
-	Icon        graphql.Upload `json:"icon"`
-	Description string         `json:"description"`
+	ID          string          `json:"id"`
+	Username    string          `json:"username"`
+	Email       string          `json:"email"`
+	Icon        *graphql.Upload `json:"icon"`
+	Description string          `json:"description"`
 }
 
 type LoginInput struct {
@@ -58,9 +58,12 @@ type LoginInput struct {
 }
 
 type NewAnswer struct {
-	UserID string          `json:"userId"`
-	Value  *string         `json:"value"`
-	File   *graphql.Upload `json:"file"`
+	UserID     string          `json:"userId"`
+	QuestionID string          `json:"questionId"`
+	AnswerType AnswerType      `json:"answerType"`
+	ChoiceID   *int            `json:"choiceId"`
+	Value      *string         `json:"value"`
+	File       *graphql.Upload `json:"file"`
 }
 
 type NewQuestion struct {
