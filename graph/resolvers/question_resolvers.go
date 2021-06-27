@@ -63,6 +63,7 @@ func (r *queryResolver) FindQuestion(ctx context.Context, id string, userId *str
 		answerers = append(answerers, a.User)
 	}
 	ans := false
+	cnt := 0
 	for _, choice := range cAll {
 		tmpId, err := choice.QueryChoiceanswers().QueryOwner().FirstID(ctx)
 		if userId != nil && err == nil {
@@ -76,14 +77,21 @@ func (r *queryResolver) FindQuestion(ctx context.Context, id string, userId *str
 		} else {
 			c.Value = count
 		}
+		cnt += count
 		choices = append(choices, c)
+		cau, _ := choice.QueryChoiceanswers().QueryOwner().Only(ctx)
+		if cau == nil { continue }
+		answerers = append(answerers, tools.CastUser(cau))
 	}
 	q.Answered = ans
 	q.Answerers = answerers
 	q.Answers = answers
 	q.Choices = choices
-	if (q.AnswerType != string(model.AnswerTypeSelect)) && (userId != nil) {
-		q.Answered = tools.ContainsUserIdInAnswers(answers, *userId)
+	q.AnswerCount = len(answers) + cnt
+	if q.AnswerType != string(model.AnswerTypeSelect) {
+		if userId != nil {
+			q.Answered = tools.ContainsUserIdInAnswers(answers, *userId)
+		}
 	}
 	return q, nil
 }
