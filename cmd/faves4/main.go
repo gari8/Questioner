@@ -69,7 +69,6 @@ func main() {
 	srv.AddTransport(&transport.Websocket{
 		Upgrader: websocket.Upgrader{
 			CheckOrigin: func(r *http.Request) bool {
-				// Check against your desired domains here
 				return true
 			},
 			ReadBufferSize:  1024,
