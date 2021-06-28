@@ -10,7 +10,7 @@ COPY ../go.sum .
 RUN go mod download
 COPY ../ .
 
-RUN GOOS=linux GOARCH=amd64 go build -o /main
+RUN GOOS=linux GOARCH=amd64 go build -o /main cmd/faves4/main
 
 FROM alpine:latest
 
