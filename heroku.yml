@@ -1,0 +1,7 @@
+build:
+  docker:
+    web:
+      dockerfile: ./heroku/Dockerfile
+      target: builder
+run:
+  web: /main
