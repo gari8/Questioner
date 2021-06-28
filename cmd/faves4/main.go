@@ -57,6 +57,9 @@ func main() {
 
 	acceptOrigins := []string{
 		"http://localhost:3000",
+		"https://faves4.com",
+		"https://www.faves4.com",
+		"https://faves4.vercel.app",
 	}
 
 	router.Use(cors.New(cors.Options{
