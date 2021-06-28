@@ -48,7 +48,7 @@ func main() {
 
 	usePlayGround := true
 
-	env := os.Getenv("CONTAINER_ENV")
+	env := os.Getenv("DEPLOY_ENV")
 	if env == "production" {
 		usePlayGround = false
 	}
