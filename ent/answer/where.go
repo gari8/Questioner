@@ -218,20 +218,6 @@ func AnswerTypeHasSuffix(v string) predicate.Answer {
 	})
 }
 
-// AnswerTypeIsNil applies the IsNil predicate on the "answer_type" field.
-func AnswerTypeIsNil() predicate.Answer {
-	return predicate.Answer(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldAnswerType)))
-	})
-}
-
-// AnswerTypeNotNil applies the NotNil predicate on the "answer_type" field.
-func AnswerTypeNotNil() predicate.Answer {
-	return predicate.Answer(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldAnswerType)))
-	})
-}
-
 // AnswerTypeEqualFold applies the EqualFold predicate on the "answer_type" field.
 func AnswerTypeEqualFold(v string) predicate.Answer {
 	return predicate.Answer(func(s *sql.Selector) {

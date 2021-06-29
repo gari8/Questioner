@@ -35,20 +35,6 @@ func (au *AnswerUpdate) SetAnswerType(s string) *AnswerUpdate {
 	return au
 }
 
-// SetNillableAnswerType sets the "answer_type" field if the given value is not nil.
-func (au *AnswerUpdate) SetNillableAnswerType(s *string) *AnswerUpdate {
-	if s != nil {
-		au.SetAnswerType(*s)
-	}
-	return au
-}
-
-// ClearAnswerType clears the value of the "answer_type" field.
-func (au *AnswerUpdate) ClearAnswerType() *AnswerUpdate {
-	au.mutation.ClearAnswerType()
-	return au
-}
-
 // SetContent sets the "content" field.
 func (au *AnswerUpdate) SetContent(s string) *AnswerUpdate {
 	au.mutation.SetContent(s)
@@ -189,6 +175,11 @@ func (au *AnswerUpdate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (au *AnswerUpdate) check() error {
+	if v, ok := au.mutation.AnswerType(); ok {
+		if err := answer.AnswerTypeValidator(v); err != nil {
+			return &ValidationError{Name: "answer_type", err: fmt.Errorf("ent: validator failed for field \"answer_type\": %w", err)}
+		}
+	}
 	if v, ok := au.mutation.Content(); ok {
 		if err := answer.ContentValidator(v); err != nil {
 			return &ValidationError{Name: "content", err: fmt.Errorf("ent: validator failed for field \"content\": %w", err)}
@@ -219,12 +210,6 @@ func (au *AnswerUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: answer.FieldAnswerType,
-		})
-	}
-	if au.mutation.AnswerTypeCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
 			Column: answer.FieldAnswerType,
 		})
 	}
@@ -340,20 +325,6 @@ type AnswerUpdateOne struct {
 // SetAnswerType sets the "answer_type" field.
 func (auo *AnswerUpdateOne) SetAnswerType(s string) *AnswerUpdateOne {
 	auo.mutation.SetAnswerType(s)
-	return auo
-}
-
-// SetNillableAnswerType sets the "answer_type" field if the given value is not nil.
-func (auo *AnswerUpdateOne) SetNillableAnswerType(s *string) *AnswerUpdateOne {
-	if s != nil {
-		auo.SetAnswerType(*s)
-	}
-	return auo
-}
-
-// ClearAnswerType clears the value of the "answer_type" field.
-func (auo *AnswerUpdateOne) ClearAnswerType() *AnswerUpdateOne {
-	auo.mutation.ClearAnswerType()
 	return auo
 }
 
@@ -504,6 +475,11 @@ func (auo *AnswerUpdateOne) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (auo *AnswerUpdateOne) check() error {
+	if v, ok := auo.mutation.AnswerType(); ok {
+		if err := answer.AnswerTypeValidator(v); err != nil {
+			return &ValidationError{Name: "answer_type", err: fmt.Errorf("ent: validator failed for field \"answer_type\": %w", err)}
+		}
+	}
 	if v, ok := auo.mutation.Content(); ok {
 		if err := answer.ContentValidator(v); err != nil {
 			return &ValidationError{Name: "content", err: fmt.Errorf("ent: validator failed for field \"content\": %w", err)}
@@ -551,12 +527,6 @@ func (auo *AnswerUpdateOne) sqlSave(ctx context.Context) (_node *Answer, err err
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: answer.FieldAnswerType,
-		})
-	}
-	if auo.mutation.AnswerTypeCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
 			Column: answer.FieldAnswerType,
 		})
 	}

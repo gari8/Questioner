@@ -475,20 +475,6 @@ func TextAfterAnsweredHasSuffix(v string) predicate.Question {
 	})
 }
 
-// TextAfterAnsweredIsNil applies the IsNil predicate on the "text_after_answered" field.
-func TextAfterAnsweredIsNil() predicate.Question {
-	return predicate.Question(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldTextAfterAnswered)))
-	})
-}
-
-// TextAfterAnsweredNotNil applies the NotNil predicate on the "text_after_answered" field.
-func TextAfterAnsweredNotNil() predicate.Question {
-	return predicate.Question(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldTextAfterAnswered)))
-	})
-}
-
 // TextAfterAnsweredEqualFold applies the EqualFold predicate on the "text_after_answered" field.
 func TextAfterAnsweredEqualFold(v string) predicate.Question {
 	return predicate.Question(func(s *sql.Selector) {
@@ -611,20 +597,6 @@ func AnswerTypeHasPrefix(v string) predicate.Question {
 func AnswerTypeHasSuffix(v string) predicate.Question {
 	return predicate.Question(func(s *sql.Selector) {
 		s.Where(sql.HasSuffix(s.C(FieldAnswerType), v))
-	})
-}
-
-// AnswerTypeIsNil applies the IsNil predicate on the "answer_type" field.
-func AnswerTypeIsNil() predicate.Question {
-	return predicate.Question(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldAnswerType)))
-	})
-}
-
-// AnswerTypeNotNil applies the NotNil predicate on the "answer_type" field.
-func AnswerTypeNotNil() predicate.Question {
-	return predicate.Question(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldAnswerType)))
 	})
 }
 

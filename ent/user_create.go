@@ -200,6 +200,14 @@ func (uc *UserCreate) SaveX(ctx context.Context) *User {
 
 // defaults sets the default values of the builder before save.
 func (uc *UserCreate) defaults() {
+	if _, ok := uc.mutation.Icon(); !ok {
+		v := user.DefaultIcon
+		uc.mutation.SetIcon(v)
+	}
+	if _, ok := uc.mutation.Description(); !ok {
+		v := user.DefaultDescription
+		uc.mutation.SetDescription(v)
+	}
 	if _, ok := uc.mutation.CratedAt(); !ok {
 		v := user.DefaultCratedAt()
 		uc.mutation.SetCratedAt(v)
@@ -216,6 +224,9 @@ func (uc *UserCreate) check() error {
 			return &ValidationError{Name: "username", err: fmt.Errorf("ent: validator failed for field \"username\": %w", err)}
 		}
 	}
+	if _, ok := uc.mutation.Icon(); !ok {
+		return &ValidationError{Name: "icon", err: errors.New("ent: missing required field \"icon\"")}
+	}
 	if _, ok := uc.mutation.Email(); !ok {
 		return &ValidationError{Name: "email", err: errors.New("ent: missing required field \"email\"")}
 	}
@@ -231,6 +242,9 @@ func (uc *UserCreate) check() error {
 		if err := user.PasswordValidator(v); err != nil {
 			return &ValidationError{Name: "password", err: fmt.Errorf("ent: validator failed for field \"password\": %w", err)}
 		}
+	}
+	if _, ok := uc.mutation.Description(); !ok {
+		return &ValidationError{Name: "description", err: errors.New("ent: missing required field \"description\"")}
 	}
 	if _, ok := uc.mutation.CratedAt(); !ok {
 		return &ValidationError{Name: "crated_at", err: errors.New("ent: missing required field \"crated_at\"")}

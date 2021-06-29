@@ -128,7 +128,7 @@ scalar Upload
 
 type Mutation {
   createUser(input: NewUser!): User!
-  createSession(input: LoginInput): String!
+  createSession(input: LoginInput!): String!
   editUser(input: EditUser!): User!
   editPassword(id: ID!, password: String!): Boolean!
   createQuestion(input: NewQuestion!): Question!

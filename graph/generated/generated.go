@@ -64,7 +64,7 @@ type ComplexityRoot struct {
 	Mutation struct {
 		CreateAnswer   func(childComplexity int, input model.NewAnswer) int
 		CreateQuestion func(childComplexity int, input model.NewQuestion) int
-		CreateSession  func(childComplexity int, input *model.LoginInput) int
+		CreateSession  func(childComplexity int, input model.LoginInput) int
 		CreateUser     func(childComplexity int, input model.NewUser) int
 		EditPassword   func(childComplexity int, id string, password string) int
 		EditQuestion   func(childComplexity int, input model.EditQuestion) int
@@ -118,7 +118,7 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	CreateUser(ctx context.Context, input model.NewUser) (*model.User, error)
-	CreateSession(ctx context.Context, input *model.LoginInput) (string, error)
+	CreateSession(ctx context.Context, input model.LoginInput) (string, error)
 	EditUser(ctx context.Context, input model.EditUser) (*model.User, error)
 	EditPassword(ctx context.Context, id string, password string) (bool, error)
 	CreateQuestion(ctx context.Context, input model.NewQuestion) (*model.Question, error)
@@ -256,7 +256,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateSession(childComplexity, args["input"].(*model.LoginInput)), true
+		return e.complexity.Mutation.CreateSession(childComplexity, args["input"].(model.LoginInput)), true
 
 	case "Mutation.createUser":
 		if e.complexity.Mutation.CreateUser == nil {
@@ -770,7 +770,7 @@ scalar Upload
 
 type Mutation {
   createUser(input: NewUser!): User!
-  createSession(input: LoginInput): String!
+  createSession(input: LoginInput!): String!
   editUser(input: EditUser!): User!
   editPassword(id: ID!, password: String!): Boolean!
   createQuestion(input: NewQuestion!): Question!
@@ -817,10 +817,10 @@ func (ec *executionContext) field_Mutation_createQuestion_args(ctx context.Conte
 func (ec *executionContext) field_Mutation_createSession_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *model.LoginInput
+	var arg0 model.LoginInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalOLoginInput2ᚖfaves4ᚋgraphᚋmodelᚐLoginInput(ctx, tmp)
+		arg0, err = ec.unmarshalNLoginInput2faves4ᚋgraphᚋmodelᚐLoginInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1461,7 +1461,7 @@ func (ec *executionContext) _Mutation_createSession(ctx context.Context, field g
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateSession(rctx, args["input"].(*model.LoginInput))
+		return ec.resolvers.Mutation().CreateSession(rctx, args["input"].(model.LoginInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5216,6 +5216,11 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
+func (ec *executionContext) unmarshalNLoginInput2faves4ᚋgraphᚋmodelᚐLoginInput(ctx context.Context, v interface{}) (model.LoginInput, error) {
+	res, err := ec.unmarshalInputLoginInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNNewAnswer2faves4ᚋgraphᚋmodelᚐNewAnswer(ctx context.Context, v interface{}) (model.NewAnswer, error) {
 	res, err := ec.unmarshalInputNewAnswer(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -5733,14 +5738,6 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 		return graphql.Null
 	}
 	return graphql.MarshalInt(*v)
-}
-
-func (ec *executionContext) unmarshalOLoginInput2ᚖfaves4ᚋgraphᚋmodelᚐLoginInput(ctx context.Context, v interface{}) (*model.LoginInput, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalInputLoginInput(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalOQuestion2ᚕᚖfaves4ᚋgraphᚋmodelᚐQuestionᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Question) graphql.Marshaler {

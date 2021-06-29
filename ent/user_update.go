@@ -50,12 +50,6 @@ func (uu *UserUpdate) SetNillableIcon(s *string) *UserUpdate {
 	return uu
 }
 
-// ClearIcon clears the value of the "icon" field.
-func (uu *UserUpdate) ClearIcon() *UserUpdate {
-	uu.mutation.ClearIcon()
-	return uu
-}
-
 // SetEmail sets the "email" field.
 func (uu *UserUpdate) SetEmail(s string) *UserUpdate {
 	uu.mutation.SetEmail(s)
@@ -79,12 +73,6 @@ func (uu *UserUpdate) SetNillableDescription(s *string) *UserUpdate {
 	if s != nil {
 		uu.SetDescription(*s)
 	}
-	return uu
-}
-
-// ClearDescription clears the value of the "description" field.
-func (uu *UserUpdate) ClearDescription() *UserUpdate {
-	uu.mutation.ClearDescription()
 	return uu
 }
 
@@ -330,12 +318,6 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: user.FieldIcon,
 		})
 	}
-	if uu.mutation.IconCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: user.FieldIcon,
-		})
-	}
 	if value, ok := uu.mutation.Email(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -354,12 +336,6 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: user.FieldDescription,
-		})
-	}
-	if uu.mutation.DescriptionCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
 			Column: user.FieldDescription,
 		})
 	}
@@ -577,12 +553,6 @@ func (uuo *UserUpdateOne) SetNillableIcon(s *string) *UserUpdateOne {
 	return uuo
 }
 
-// ClearIcon clears the value of the "icon" field.
-func (uuo *UserUpdateOne) ClearIcon() *UserUpdateOne {
-	uuo.mutation.ClearIcon()
-	return uuo
-}
-
 // SetEmail sets the "email" field.
 func (uuo *UserUpdateOne) SetEmail(s string) *UserUpdateOne {
 	uuo.mutation.SetEmail(s)
@@ -606,12 +576,6 @@ func (uuo *UserUpdateOne) SetNillableDescription(s *string) *UserUpdateOne {
 	if s != nil {
 		uuo.SetDescription(*s)
 	}
-	return uuo
-}
-
-// ClearDescription clears the value of the "description" field.
-func (uuo *UserUpdateOne) ClearDescription() *UserUpdateOne {
-	uuo.mutation.ClearDescription()
 	return uuo
 }
 
@@ -881,12 +845,6 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Column: user.FieldIcon,
 		})
 	}
-	if uuo.mutation.IconCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: user.FieldIcon,
-		})
-	}
 	if value, ok := uuo.mutation.Email(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -905,12 +863,6 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: user.FieldDescription,
-		})
-	}
-	if uuo.mutation.DescriptionCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
 			Column: user.FieldDescription,
 		})
 	}

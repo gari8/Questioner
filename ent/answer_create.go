@@ -28,14 +28,6 @@ func (ac *AnswerCreate) SetAnswerType(s string) *AnswerCreate {
 	return ac
 }
 
-// SetNillableAnswerType sets the "answer_type" field if the given value is not nil.
-func (ac *AnswerCreate) SetNillableAnswerType(s *string) *AnswerCreate {
-	if s != nil {
-		ac.SetAnswerType(*s)
-	}
-	return ac
-}
-
 // SetContent sets the "content" field.
 func (ac *AnswerCreate) SetContent(s string) *AnswerCreate {
 	ac.mutation.SetContent(s)
@@ -168,6 +160,14 @@ func (ac *AnswerCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (ac *AnswerCreate) check() error {
+	if _, ok := ac.mutation.AnswerType(); !ok {
+		return &ValidationError{Name: "answer_type", err: errors.New("ent: missing required field \"answer_type\"")}
+	}
+	if v, ok := ac.mutation.AnswerType(); ok {
+		if err := answer.AnswerTypeValidator(v); err != nil {
+			return &ValidationError{Name: "answer_type", err: fmt.Errorf("ent: validator failed for field \"answer_type\": %w", err)}
+		}
+	}
 	if _, ok := ac.mutation.Content(); !ok {
 		return &ValidationError{Name: "content", err: errors.New("ent: missing required field \"content\"")}
 	}

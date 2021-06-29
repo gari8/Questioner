@@ -17,10 +17,10 @@ func (User) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("id").Unique().NotEmpty(),
 		field.String("username").NotEmpty(),
-		field.String("icon").Optional(),
+		field.String("icon").Default(""),
 		field.String("email").Unique().NotEmpty(),
 		field.String("password").NotEmpty(),
-		field.String("description").Optional(),
+		field.String("description").Default(""),
 		field.Time("crated_at").Default(time.Now).Immutable(),
 		field.Time("updated_at").Optional(),
 	}

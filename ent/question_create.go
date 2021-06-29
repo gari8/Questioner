@@ -69,14 +69,6 @@ func (qc *QuestionCreate) SetAnswerType(s string) *QuestionCreate {
 	return qc
 }
 
-// SetNillableAnswerType sets the "answer_type" field if the given value is not nil.
-func (qc *QuestionCreate) SetNillableAnswerType(s *string) *QuestionCreate {
-	if s != nil {
-		qc.SetAnswerType(*s)
-	}
-	return qc
-}
-
 // SetPublishedAt sets the "published_at" field.
 func (qc *QuestionCreate) SetPublishedAt(t time.Time) *QuestionCreate {
 	qc.mutation.SetPublishedAt(t)
@@ -240,6 +232,10 @@ func (qc *QuestionCreate) SaveX(ctx context.Context) *Question {
 
 // defaults sets the default values of the builder before save.
 func (qc *QuestionCreate) defaults() {
+	if _, ok := qc.mutation.TextAfterAnswered(); !ok {
+		v := question.DefaultTextAfterAnswered
+		qc.mutation.SetTextAfterAnswered(v)
+	}
 	if _, ok := qc.mutation.Enabled(); !ok {
 		v := question.DefaultEnabled
 		qc.mutation.SetEnabled(v)
@@ -268,8 +264,19 @@ func (qc *QuestionCreate) check() error {
 			return &ValidationError{Name: "content", err: fmt.Errorf("ent: validator failed for field \"content\": %w", err)}
 		}
 	}
+	if _, ok := qc.mutation.TextAfterAnswered(); !ok {
+		return &ValidationError{Name: "text_after_answered", err: errors.New("ent: missing required field \"text_after_answered\"")}
+	}
 	if _, ok := qc.mutation.Enabled(); !ok {
 		return &ValidationError{Name: "enabled", err: errors.New("ent: missing required field \"enabled\"")}
+	}
+	if _, ok := qc.mutation.AnswerType(); !ok {
+		return &ValidationError{Name: "answer_type", err: errors.New("ent: missing required field \"answer_type\"")}
+	}
+	if v, ok := qc.mutation.AnswerType(); ok {
+		if err := question.AnswerTypeValidator(v); err != nil {
+			return &ValidationError{Name: "answer_type", err: fmt.Errorf("ent: validator failed for field \"answer_type\": %w", err)}
+		}
 	}
 	if _, ok := qc.mutation.CratedAt(); !ok {
 		return &ValidationError{Name: "crated_at", err: errors.New("ent: missing required field \"crated_at\"")}

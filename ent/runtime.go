@@ -18,6 +18,10 @@ import (
 func init() {
 	answerFields := schema.Answer{}.Fields()
 	_ = answerFields
+	// answerDescAnswerType is the schema descriptor for answer_type field.
+	answerDescAnswerType := answerFields[0].Descriptor()
+	// answer.AnswerTypeValidator is a validator for the "answer_type" field. It is called by the builders before save.
+	answer.AnswerTypeValidator = answerDescAnswerType.Validators[0].(func(string) error)
 	// answerDescContent is the schema descriptor for content field.
 	answerDescContent := answerFields[1].Descriptor()
 	// answer.ContentValidator is a validator for the "content" field. It is called by the builders before save.
@@ -48,10 +52,18 @@ func init() {
 	questionDescContent := questionFields[2].Descriptor()
 	// question.ContentValidator is a validator for the "content" field. It is called by the builders before save.
 	question.ContentValidator = questionDescContent.Validators[0].(func(string) error)
+	// questionDescTextAfterAnswered is the schema descriptor for text_after_answered field.
+	questionDescTextAfterAnswered := questionFields[3].Descriptor()
+	// question.DefaultTextAfterAnswered holds the default value on creation for the text_after_answered field.
+	question.DefaultTextAfterAnswered = questionDescTextAfterAnswered.Default.(string)
 	// questionDescEnabled is the schema descriptor for enabled field.
 	questionDescEnabled := questionFields[4].Descriptor()
 	// question.DefaultEnabled holds the default value on creation for the enabled field.
 	question.DefaultEnabled = questionDescEnabled.Default.(bool)
+	// questionDescAnswerType is the schema descriptor for answer_type field.
+	questionDescAnswerType := questionFields[5].Descriptor()
+	// question.AnswerTypeValidator is a validator for the "answer_type" field. It is called by the builders before save.
+	question.AnswerTypeValidator = questionDescAnswerType.Validators[0].(func(string) error)
 	// questionDescCratedAt is the schema descriptor for crated_at field.
 	questionDescCratedAt := questionFields[8].Descriptor()
 	// question.DefaultCratedAt holds the default value on creation for the crated_at field.
@@ -66,6 +78,10 @@ func init() {
 	userDescUsername := userFields[1].Descriptor()
 	// user.UsernameValidator is a validator for the "username" field. It is called by the builders before save.
 	user.UsernameValidator = userDescUsername.Validators[0].(func(string) error)
+	// userDescIcon is the schema descriptor for icon field.
+	userDescIcon := userFields[2].Descriptor()
+	// user.DefaultIcon holds the default value on creation for the icon field.
+	user.DefaultIcon = userDescIcon.Default.(string)
 	// userDescEmail is the schema descriptor for email field.
 	userDescEmail := userFields[3].Descriptor()
 	// user.EmailValidator is a validator for the "email" field. It is called by the builders before save.
@@ -74,6 +90,10 @@ func init() {
 	userDescPassword := userFields[4].Descriptor()
 	// user.PasswordValidator is a validator for the "password" field. It is called by the builders before save.
 	user.PasswordValidator = userDescPassword.Validators[0].(func(string) error)
+	// userDescDescription is the schema descriptor for description field.
+	userDescDescription := userFields[5].Descriptor()
+	// user.DefaultDescription holds the default value on creation for the description field.
+	user.DefaultDescription = userDescDescription.Default.(string)
 	// userDescCratedAt is the schema descriptor for crated_at field.
 	userDescCratedAt := userFields[6].Descriptor()
 	// user.DefaultCratedAt holds the default value on creation for the crated_at field.

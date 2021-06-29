@@ -73,6 +73,8 @@ func ValidColumn(column string) bool {
 }
 
 var (
+	// AnswerTypeValidator is a validator for the "answer_type" field. It is called by the builders before save.
+	AnswerTypeValidator func(string) error
 	// ContentValidator is a validator for the "content" field. It is called by the builders before save.
 	ContentValidator func(string) error
 	// DefaultCratedAt holds the default value on creation for the "crated_at" field.

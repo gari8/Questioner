@@ -82,7 +82,7 @@ func CastQuestion(ctx context.Context, q *ent.Question) (*model.Question, error)
 	cnt, err := q.QueryAnswers().Count(ctx)
 	if err != nil { return nil, err }
 	ut, err := q.QueryOwner().Only(ctx)
-	tmp := &model.Question{
+	return &model.Question{
 		ID: q.ID,
 		User: CastUser(ut),
 		Title: q.Title,
@@ -95,8 +95,7 @@ func CastQuestion(ctx context.Context, q *ent.Question) (*model.Question, error)
 		Answered: false,
 		CreatedAt: &ca,
 		UpdatedAt: &ua,
-	}
-	return tmp, nil
+	}, nil
 }
 
 func CastAnswer(ctx context.Context, a *ent.Answer) (*model.Answer, error) {

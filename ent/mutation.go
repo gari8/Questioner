@@ -163,22 +163,9 @@ func (m *AnswerMutation) OldAnswerType(ctx context.Context) (v string, err error
 	return oldValue.AnswerType, nil
 }
 
-// ClearAnswerType clears the value of the "answer_type" field.
-func (m *AnswerMutation) ClearAnswerType() {
-	m.answer_type = nil
-	m.clearedFields[answer.FieldAnswerType] = struct{}{}
-}
-
-// AnswerTypeCleared returns if the "answer_type" field was cleared in this mutation.
-func (m *AnswerMutation) AnswerTypeCleared() bool {
-	_, ok := m.clearedFields[answer.FieldAnswerType]
-	return ok
-}
-
 // ResetAnswerType resets all changes to the "answer_type" field.
 func (m *AnswerMutation) ResetAnswerType() {
 	m.answer_type = nil
-	delete(m.clearedFields, answer.FieldAnswerType)
 }
 
 // SetContent sets the "content" field.
@@ -507,9 +494,6 @@ func (m *AnswerMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *AnswerMutation) ClearedFields() []string {
 	var fields []string
-	if m.FieldCleared(answer.FieldAnswerType) {
-		fields = append(fields, answer.FieldAnswerType)
-	}
 	if m.FieldCleared(answer.FieldUpdatedAt) {
 		fields = append(fields, answer.FieldUpdatedAt)
 	}
@@ -527,9 +511,6 @@ func (m *AnswerMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *AnswerMutation) ClearField(name string) error {
 	switch name {
-	case answer.FieldAnswerType:
-		m.ClearAnswerType()
-		return nil
 	case answer.FieldUpdatedAt:
 		m.ClearUpdatedAt()
 		return nil
@@ -1721,22 +1702,9 @@ func (m *QuestionMutation) OldTextAfterAnswered(ctx context.Context) (v string, 
 	return oldValue.TextAfterAnswered, nil
 }
 
-// ClearTextAfterAnswered clears the value of the "text_after_answered" field.
-func (m *QuestionMutation) ClearTextAfterAnswered() {
-	m.text_after_answered = nil
-	m.clearedFields[question.FieldTextAfterAnswered] = struct{}{}
-}
-
-// TextAfterAnsweredCleared returns if the "text_after_answered" field was cleared in this mutation.
-func (m *QuestionMutation) TextAfterAnsweredCleared() bool {
-	_, ok := m.clearedFields[question.FieldTextAfterAnswered]
-	return ok
-}
-
 // ResetTextAfterAnswered resets all changes to the "text_after_answered" field.
 func (m *QuestionMutation) ResetTextAfterAnswered() {
 	m.text_after_answered = nil
-	delete(m.clearedFields, question.FieldTextAfterAnswered)
 }
 
 // SetEnabled sets the "enabled" field.
@@ -1806,22 +1774,9 @@ func (m *QuestionMutation) OldAnswerType(ctx context.Context) (v string, err err
 	return oldValue.AnswerType, nil
 }
 
-// ClearAnswerType clears the value of the "answer_type" field.
-func (m *QuestionMutation) ClearAnswerType() {
-	m.answer_type = nil
-	m.clearedFields[question.FieldAnswerType] = struct{}{}
-}
-
-// AnswerTypeCleared returns if the "answer_type" field was cleared in this mutation.
-func (m *QuestionMutation) AnswerTypeCleared() bool {
-	_, ok := m.clearedFields[question.FieldAnswerType]
-	return ok
-}
-
 // ResetAnswerType resets all changes to the "answer_type" field.
 func (m *QuestionMutation) ResetAnswerType() {
 	m.answer_type = nil
-	delete(m.clearedFields, question.FieldAnswerType)
 }
 
 // SetPublishedAt sets the "published_at" field.
@@ -2349,12 +2304,6 @@ func (m *QuestionMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *QuestionMutation) ClearedFields() []string {
 	var fields []string
-	if m.FieldCleared(question.FieldTextAfterAnswered) {
-		fields = append(fields, question.FieldTextAfterAnswered)
-	}
-	if m.FieldCleared(question.FieldAnswerType) {
-		fields = append(fields, question.FieldAnswerType)
-	}
 	if m.FieldCleared(question.FieldPublishedAt) {
 		fields = append(fields, question.FieldPublishedAt)
 	}
@@ -2378,12 +2327,6 @@ func (m *QuestionMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *QuestionMutation) ClearField(name string) error {
 	switch name {
-	case question.FieldTextAfterAnswered:
-		m.ClearTextAfterAnswered()
-		return nil
-	case question.FieldAnswerType:
-		m.ClearAnswerType()
-		return nil
 	case question.FieldPublishedAt:
 		m.ClearPublishedAt()
 		return nil
@@ -2740,22 +2683,9 @@ func (m *UserMutation) OldIcon(ctx context.Context) (v string, err error) {
 	return oldValue.Icon, nil
 }
 
-// ClearIcon clears the value of the "icon" field.
-func (m *UserMutation) ClearIcon() {
-	m.icon = nil
-	m.clearedFields[user.FieldIcon] = struct{}{}
-}
-
-// IconCleared returns if the "icon" field was cleared in this mutation.
-func (m *UserMutation) IconCleared() bool {
-	_, ok := m.clearedFields[user.FieldIcon]
-	return ok
-}
-
 // ResetIcon resets all changes to the "icon" field.
 func (m *UserMutation) ResetIcon() {
 	m.icon = nil
-	delete(m.clearedFields, user.FieldIcon)
 }
 
 // SetEmail sets the "email" field.
@@ -2861,22 +2791,9 @@ func (m *UserMutation) OldDescription(ctx context.Context) (v string, err error)
 	return oldValue.Description, nil
 }
 
-// ClearDescription clears the value of the "description" field.
-func (m *UserMutation) ClearDescription() {
-	m.description = nil
-	m.clearedFields[user.FieldDescription] = struct{}{}
-}
-
-// DescriptionCleared returns if the "description" field was cleared in this mutation.
-func (m *UserMutation) DescriptionCleared() bool {
-	_, ok := m.clearedFields[user.FieldDescription]
-	return ok
-}
-
 // ResetDescription resets all changes to the "description" field.
 func (m *UserMutation) ResetDescription() {
 	m.description = nil
-	delete(m.clearedFields, user.FieldDescription)
 }
 
 // SetCratedAt sets the "crated_at" field.
@@ -3292,12 +3209,6 @@ func (m *UserMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *UserMutation) ClearedFields() []string {
 	var fields []string
-	if m.FieldCleared(user.FieldIcon) {
-		fields = append(fields, user.FieldIcon)
-	}
-	if m.FieldCleared(user.FieldDescription) {
-		fields = append(fields, user.FieldDescription)
-	}
 	if m.FieldCleared(user.FieldUpdatedAt) {
 		fields = append(fields, user.FieldUpdatedAt)
 	}
@@ -3315,12 +3226,6 @@ func (m *UserMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *UserMutation) ClearField(name string) error {
 	switch name {
-	case user.FieldIcon:
-		m.ClearIcon()
-		return nil
-	case user.FieldDescription:
-		m.ClearDescription()
-		return nil
 	case user.FieldUpdatedAt:
 		m.ClearUpdatedAt()
 		return nil

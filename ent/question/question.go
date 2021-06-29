@@ -100,8 +100,12 @@ var (
 	TitleValidator func(string) error
 	// ContentValidator is a validator for the "content" field. It is called by the builders before save.
 	ContentValidator func(string) error
+	// DefaultTextAfterAnswered holds the default value on creation for the "text_after_answered" field.
+	DefaultTextAfterAnswered string
 	// DefaultEnabled holds the default value on creation for the "enabled" field.
 	DefaultEnabled bool
+	// AnswerTypeValidator is a validator for the "answer_type" field. It is called by the builders before save.
+	AnswerTypeValidator func(string) error
 	// DefaultCratedAt holds the default value on creation for the "crated_at" field.
 	DefaultCratedAt func() time.Time
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.

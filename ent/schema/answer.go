@@ -15,7 +15,7 @@ type Answer struct {
 // Fields of the Answer.
 func (Answer) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("answer_type").Optional(),
+		field.String("answer_type").NotEmpty(),
 		field.String("content").NotEmpty(),
 		field.Time("crated_at").Default(time.Now).Immutable(),
 		field.Time("updated_at").Optional(),

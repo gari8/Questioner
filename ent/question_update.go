@@ -56,12 +56,6 @@ func (qu *QuestionUpdate) SetNillableTextAfterAnswered(s *string) *QuestionUpdat
 	return qu
 }
 
-// ClearTextAfterAnswered clears the value of the "text_after_answered" field.
-func (qu *QuestionUpdate) ClearTextAfterAnswered() *QuestionUpdate {
-	qu.mutation.ClearTextAfterAnswered()
-	return qu
-}
-
 // SetEnabled sets the "enabled" field.
 func (qu *QuestionUpdate) SetEnabled(b bool) *QuestionUpdate {
 	qu.mutation.SetEnabled(b)
@@ -79,20 +73,6 @@ func (qu *QuestionUpdate) SetNillableEnabled(b *bool) *QuestionUpdate {
 // SetAnswerType sets the "answer_type" field.
 func (qu *QuestionUpdate) SetAnswerType(s string) *QuestionUpdate {
 	qu.mutation.SetAnswerType(s)
-	return qu
-}
-
-// SetNillableAnswerType sets the "answer_type" field if the given value is not nil.
-func (qu *QuestionUpdate) SetNillableAnswerType(s *string) *QuestionUpdate {
-	if s != nil {
-		qu.SetAnswerType(*s)
-	}
-	return qu
-}
-
-// ClearAnswerType clears the value of the "answer_type" field.
-func (qu *QuestionUpdate) ClearAnswerType() *QuestionUpdate {
-	qu.mutation.ClearAnswerType()
 	return qu
 }
 
@@ -327,6 +307,11 @@ func (qu *QuestionUpdate) check() error {
 			return &ValidationError{Name: "content", err: fmt.Errorf("ent: validator failed for field \"content\": %w", err)}
 		}
 	}
+	if v, ok := qu.mutation.AnswerType(); ok {
+		if err := question.AnswerTypeValidator(v); err != nil {
+			return &ValidationError{Name: "answer_type", err: fmt.Errorf("ent: validator failed for field \"answer_type\": %w", err)}
+		}
+	}
 	return nil
 }
 
@@ -369,12 +354,6 @@ func (qu *QuestionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: question.FieldTextAfterAnswered,
 		})
 	}
-	if qu.mutation.TextAfterAnsweredCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: question.FieldTextAfterAnswered,
-		})
-	}
 	if value, ok := qu.mutation.Enabled(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
@@ -386,12 +365,6 @@ func (qu *QuestionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: question.FieldAnswerType,
-		})
-	}
-	if qu.mutation.AnswerTypeCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
 			Column: question.FieldAnswerType,
 		})
 	}
@@ -622,12 +595,6 @@ func (quo *QuestionUpdateOne) SetNillableTextAfterAnswered(s *string) *QuestionU
 	return quo
 }
 
-// ClearTextAfterAnswered clears the value of the "text_after_answered" field.
-func (quo *QuestionUpdateOne) ClearTextAfterAnswered() *QuestionUpdateOne {
-	quo.mutation.ClearTextAfterAnswered()
-	return quo
-}
-
 // SetEnabled sets the "enabled" field.
 func (quo *QuestionUpdateOne) SetEnabled(b bool) *QuestionUpdateOne {
 	quo.mutation.SetEnabled(b)
@@ -645,20 +612,6 @@ func (quo *QuestionUpdateOne) SetNillableEnabled(b *bool) *QuestionUpdateOne {
 // SetAnswerType sets the "answer_type" field.
 func (quo *QuestionUpdateOne) SetAnswerType(s string) *QuestionUpdateOne {
 	quo.mutation.SetAnswerType(s)
-	return quo
-}
-
-// SetNillableAnswerType sets the "answer_type" field if the given value is not nil.
-func (quo *QuestionUpdateOne) SetNillableAnswerType(s *string) *QuestionUpdateOne {
-	if s != nil {
-		quo.SetAnswerType(*s)
-	}
-	return quo
-}
-
-// ClearAnswerType clears the value of the "answer_type" field.
-func (quo *QuestionUpdateOne) ClearAnswerType() *QuestionUpdateOne {
-	quo.mutation.ClearAnswerType()
 	return quo
 }
 
@@ -900,6 +853,11 @@ func (quo *QuestionUpdateOne) check() error {
 			return &ValidationError{Name: "content", err: fmt.Errorf("ent: validator failed for field \"content\": %w", err)}
 		}
 	}
+	if v, ok := quo.mutation.AnswerType(); ok {
+		if err := question.AnswerTypeValidator(v); err != nil {
+			return &ValidationError{Name: "answer_type", err: fmt.Errorf("ent: validator failed for field \"answer_type\": %w", err)}
+		}
+	}
 	return nil
 }
 
@@ -959,12 +917,6 @@ func (quo *QuestionUpdateOne) sqlSave(ctx context.Context) (_node *Question, err
 			Column: question.FieldTextAfterAnswered,
 		})
 	}
-	if quo.mutation.TextAfterAnsweredCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: question.FieldTextAfterAnswered,
-		})
-	}
 	if value, ok := quo.mutation.Enabled(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
@@ -976,12 +928,6 @@ func (quo *QuestionUpdateOne) sqlSave(ctx context.Context) (_node *Question, err
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: question.FieldAnswerType,
-		})
-	}
-	if quo.mutation.AnswerTypeCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
 			Column: question.FieldAnswerType,
 		})
 	}
