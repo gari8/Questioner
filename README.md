@@ -1,3 +1,8 @@
-# QUIC START
+# Faves4
 
-- this app was made by github.com/gari8/sprinter
+- docker compose up --build
+
+- https://faves4.herokuapp.com/
+- https://faves4-stg.herokuapp.com/
+
+
