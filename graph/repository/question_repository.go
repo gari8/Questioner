@@ -3,6 +3,8 @@ package repository
 import (
 	"context"
 	"faves4/ent"
+	"faves4/ent/choiceanswer"
+	"faves4/ent/user"
 	"faves4/graph/model"
 	"faves4/infrastructure/lib/tools"
 )
@@ -42,10 +44,12 @@ func (q *questionRepository) FetchQuestion(ctx context.Context, id string, userI
 	}
 	ans := false
 	cnt := 0
+	if userId == nil { ans = true }
 	for _, choice := range cAll {
-		tmpId, err := choice.QueryChoiceanswers().QueryOwner().FirstID(ctx)
-		if userId != nil && err == nil {
-			if tmpId == *userId { ans = true }
+		if userId != nil {
+			tmpId, _ := choice.QueryChoiceanswers().
+				Where(choiceanswer.HasOwnerWith(user.ID(*userId))).Count(ctx)
+			if tmpId > 0 { ans = true }
 		}
 		c, err := tools.CastChoice(ctx, choice)
 		if err != nil { continue }
