@@ -28,6 +28,7 @@ type Choice struct {
 	Content  string    `json:"content"`
 	Value    int       `json:"value"`
 	Question *Question `json:"question"`
+	Answered bool      `json:"answered"`
 }
 
 type ChoiceInput struct {

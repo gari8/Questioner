@@ -29,8 +29,11 @@ func (r *mutationResolver) EditUser(ctx context.Context, input model.EditUser) (
 	return r.Repository.UpdateUser(ctx, input)
 }
 
-func (r *mutationResolver) EditPassword(ctx context.Context, id string, password string) (bool, error) {
-	if _, err := r.Repository.UpdatePassword(ctx, id, password); err != nil {
+func (r *mutationResolver) EditPassword(ctx context.Context, id string, newPassword string, currentPassword string) (bool, error) {
+	if ok := r.Repository.ConfirmPassword(ctx, id, currentPassword); !ok {
+		return false, errors.New("the key pair didn't match")
+	}
+	if _, err := r.Repository.UpdatePassword(ctx, id, newPassword); err != nil {
 		return false, err
 	}
 	return true, nil

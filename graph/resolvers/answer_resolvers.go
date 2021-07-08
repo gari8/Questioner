@@ -13,3 +13,7 @@ func (r *mutationResolver) CreateAnswer(ctx context.Context, input model.NewAnsw
 func (r *queryResolver) FindAnswer(ctx context.Context, id string) (*model.Answer, error) {
 	panic(fmt.Errorf("not implemented"))
 }
+
+func (r *queryResolver) Answers(ctx context.Context, limit *int, offset *int) ([]*model.Answer, error) {
+	panic(fmt.Errorf("not implemented"))
+}

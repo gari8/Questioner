@@ -129,6 +129,7 @@ func CastChoice(ctx context.Context, c *ent.Choice) (*model.Choice, error) {
 		Content: c.Content,
 		Value: cnt,
 		Question: q,
+		Answered: false,
 	}, nil
 }
 

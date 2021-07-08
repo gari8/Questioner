@@ -21,6 +21,7 @@ type (
 		UpdateUser(ctx context.Context, input model.EditUser) (*model.User, error)
 		UpdatePassword(ctx context.Context, id string, password string) (*model.User, error)
 		FetchUsers(ctx context.Context, limit int, offset int) ([]*model.User, error)
+		ConfirmPassword(ctx context.Context, id string, password string) bool
 	}
 )
 
@@ -108,4 +109,13 @@ func (u *userRepository) FetchUsers(ctx context.Context, limit int, offset int) 
 		us = append(us, tools.CastUser(ut))
 	}
 	return us, nil
+}
+
+func (u *userRepository) ConfirmPassword(ctx context.Context, id string, password string) bool {
+	us, err := u.User.Get(ctx, id)
+	if err != nil {
+		return false
+	}
+	if ok := tools.CompareHashAndPlane(us.Password, password); ok { return true }
+	return false
 }

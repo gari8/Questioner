@@ -55,6 +55,7 @@ type ComplexityRoot struct {
 	}
 
 	Choice struct {
+		Answered func(childComplexity int) int
 		Content  func(childComplexity int) int
 		ID       func(childComplexity int) int
 		Question func(childComplexity int) int
@@ -66,12 +67,13 @@ type ComplexityRoot struct {
 		CreateQuestion func(childComplexity int, input model.NewQuestion) int
 		CreateSession  func(childComplexity int, input model.LoginInput) int
 		CreateUser     func(childComplexity int, input model.NewUser) int
-		EditPassword   func(childComplexity int, id string, password string) int
+		EditPassword   func(childComplexity int, id string, newPassword string, currentPassword string) int
 		EditQuestion   func(childComplexity int, input model.EditQuestion) int
 		EditUser       func(childComplexity int, input model.EditUser) int
 	}
 
 	Query struct {
+		Answers      func(childComplexity int, limit *int, offset *int) int
 		ConfirmToken func(childComplexity int) int
 		FindAnswer   func(childComplexity int, id string) int
 		FindQuestion func(childComplexity int, id string, userID *string) int
@@ -120,7 +122,7 @@ type MutationResolver interface {
 	CreateUser(ctx context.Context, input model.NewUser) (*model.User, error)
 	CreateSession(ctx context.Context, input model.LoginInput) (string, error)
 	EditUser(ctx context.Context, input model.EditUser) (*model.User, error)
-	EditPassword(ctx context.Context, id string, password string) (bool, error)
+	EditPassword(ctx context.Context, id string, newPassword string, currentPassword string) (bool, error)
 	CreateQuestion(ctx context.Context, input model.NewQuestion) (*model.Question, error)
 	EditQuestion(ctx context.Context, input model.EditQuestion) (bool, error)
 	CreateAnswer(ctx context.Context, input model.NewAnswer) (bool, error)
@@ -131,6 +133,7 @@ type QueryResolver interface {
 	ConfirmToken(ctx context.Context) (*model.User, error)
 	Questions(ctx context.Context, limit *int, offset *int) ([]*model.Question, error)
 	FindQuestion(ctx context.Context, id string, userID *string) (*model.Question, error)
+	Answers(ctx context.Context, limit *int, offset *int) ([]*model.Answer, error)
 	FindAnswer(ctx context.Context, id string) (*model.Answer, error)
 }
 type DirectiveResolver interface {
@@ -193,6 +196,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Answer.User(childComplexity), true
+
+	case "Choice.answered":
+		if e.complexity.Choice.Answered == nil {
+			break
+		}
+
+		return e.complexity.Choice.Answered(childComplexity), true
 
 	case "Choice.content":
 		if e.complexity.Choice.Content == nil {
@@ -280,7 +290,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.EditPassword(childComplexity, args["id"].(string), args["password"].(string)), true
+		return e.complexity.Mutation.EditPassword(childComplexity, args["id"].(string), args["newPassword"].(string), args["currentPassword"].(string)), true
 
 	case "Mutation.editQuestion":
 		if e.complexity.Mutation.EditQuestion == nil {
@@ -305,6 +315,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.EditUser(childComplexity, args["input"].(model.EditUser)), true
+
+	case "Query.answers":
+		if e.complexity.Query.Answers == nil {
+			break
+		}
+
+		args, err := ec.field_Query_answers_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Answers(childComplexity, args["limit"].(*int), args["offset"].(*int)), true
 
 	case "Query.confirmToken":
 		if e.complexity.Query.ConfirmToken == nil {
@@ -689,6 +711,7 @@ type Choice {
   content: String!
   value: Int!
   question: Question!
+  answered: Boolean!
 }
 
 interface Node {
@@ -706,6 +729,7 @@ type Query {
   confirmToken: User!
   questions(limit: Int = 12, offset: Int = 0): [Question!]!
   findQuestion(id: ID!, userId: ID): Question!
+  answers(limit: Int = 12, offset: Int = 0): [Answer!]!
   findAnswer(id: ID!): Answer!
 }
 
@@ -772,7 +796,7 @@ type Mutation {
   createUser(input: NewUser!): User!
   createSession(input: LoginInput!): String!
   editUser(input: EditUser!): User!
-  editPassword(id: ID!, password: String!): Boolean!
+  editPassword(id: ID!, newPassword: String!, currentPassword: String!): Boolean!
   createQuestion(input: NewQuestion!): Question!
   editQuestion(input: EditQuestion!): Boolean!
   createAnswer(input: NewAnswer!): Boolean!
@@ -857,14 +881,23 @@ func (ec *executionContext) field_Mutation_editPassword_args(ctx context.Context
 	}
 	args["id"] = arg0
 	var arg1 string
-	if tmp, ok := rawArgs["password"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("password"))
+	if tmp, ok := rawArgs["newPassword"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("newPassword"))
 		arg1, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["password"] = arg1
+	args["newPassword"] = arg1
+	var arg2 string
+	if tmp, ok := rawArgs["currentPassword"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("currentPassword"))
+		arg2, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["currentPassword"] = arg2
 	return args, nil
 }
 
@@ -910,6 +943,30 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 		}
 	}
 	args["name"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_answers_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *int
+	if tmp, ok := rawArgs["limit"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("limit"))
+		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["limit"] = arg0
+	var arg1 *int
+	if tmp, ok := rawArgs["offset"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("offset"))
+		arg1, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["offset"] = arg1
 	return args, nil
 }
 
@@ -1394,6 +1451,41 @@ func (ec *executionContext) _Choice_question(ctx context.Context, field graphql.
 	return ec.marshalNQuestion2ᚖfaves4ᚋgraphᚋmodelᚐQuestion(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Choice_answered(ctx context.Context, field graphql.CollectedField, obj *model.Choice) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Choice",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Answered, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_createUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -1545,7 +1637,7 @@ func (ec *executionContext) _Mutation_editPassword(ctx context.Context, field gr
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().EditPassword(rctx, args["id"].(string), args["password"].(string))
+		return ec.resolvers.Mutation().EditPassword(rctx, args["id"].(string), args["newPassword"].(string), args["currentPassword"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1889,6 +1981,48 @@ func (ec *executionContext) _Query_findQuestion(ctx context.Context, field graph
 	res := resTmp.(*model.Question)
 	fc.Result = res
 	return ec.marshalNQuestion2ᚖfaves4ᚋgraphᚋmodelᚐQuestion(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_answers(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_answers_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Answers(rctx, args["limit"].(*int), args["offset"].(*int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.Answer)
+	fc.Result = res
+	return ec.marshalNAnswer2ᚕᚖfaves4ᚋgraphᚋmodelᚐAnswerᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_findAnswer(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -4545,6 +4679,11 @@ func (ec *executionContext) _Choice(ctx context.Context, sel ast.SelectionSet, o
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "answered":
+			out.Values[i] = ec._Choice_answered(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -4697,6 +4836,20 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_findQuestion(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "answers":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_answers(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -5124,6 +5277,43 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 
 func (ec *executionContext) marshalNAnswer2faves4ᚋgraphᚋmodelᚐAnswer(ctx context.Context, sel ast.SelectionSet, v model.Answer) graphql.Marshaler {
 	return ec._Answer(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNAnswer2ᚕᚖfaves4ᚋgraphᚋmodelᚐAnswerᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Answer) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNAnswer2ᚖfaves4ᚋgraphᚋmodelᚐAnswer(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
 }
 
 func (ec *executionContext) marshalNAnswer2ᚖfaves4ᚋgraphᚋmodelᚐAnswer(ctx context.Context, sel ast.SelectionSet, v *model.Answer) graphql.Marshaler {
