@@ -14,7 +14,7 @@ func (r *mutationResolver) EditQuestion(ctx context.Context, input model.EditQue
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *queryResolver) Questions(ctx context.Context, limit *int, offset *int) ([]*model.Question, error) {
+func (r *queryResolver) Questions(ctx context.Context, limit *int, offset *int) (*model.QuestionsOutput, error) {
 	l, o := 12, 0
 	if limit != nil {
 		l = *limit
@@ -22,7 +22,12 @@ func (r *queryResolver) Questions(ctx context.Context, limit *int, offset *int) 
 	if offset != nil {
 		o = *offset
 	}
-	return r.Repository.FetchQuestions(ctx, l, o)
+	qs, err := r.Repository.FetchQuestions(ctx, l, o)
+	if err != nil { return nil, err }
+	return &model.QuestionsOutput{
+		Questions: qs,
+		Length: r.Repository.GetAllQuestionsCount(ctx),
+	}, nil
 }
 
 func (r *queryResolver) FindQuestion(ctx context.Context, id string, userId *string) (*model.Question, error) {

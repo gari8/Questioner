@@ -54,6 +54,11 @@ type ComplexityRoot struct {
 		User      func(childComplexity int) int
 	}
 
+	AnswersOutput struct {
+		Length    func(childComplexity int) int
+		Questions func(childComplexity int) int
+	}
+
 	Choice struct {
 		Answered func(childComplexity int) int
 		Content  func(childComplexity int) int
@@ -102,6 +107,11 @@ type ComplexityRoot struct {
 		User              func(childComplexity int) int
 	}
 
+	QuestionsOutput struct {
+		Length    func(childComplexity int) int
+		Questions func(childComplexity int) int
+	}
+
 	User struct {
 		AnswerCount   func(childComplexity int) int
 		Answers       func(childComplexity int) int
@@ -116,6 +126,11 @@ type ComplexityRoot struct {
 		UpdatedAt     func(childComplexity int) int
 		Username      func(childComplexity int) int
 	}
+
+	UsersOutput struct {
+		Length func(childComplexity int) int
+		Users  func(childComplexity int) int
+	}
 }
 
 type MutationResolver interface {
@@ -128,10 +143,10 @@ type MutationResolver interface {
 	CreateAnswer(ctx context.Context, input model.NewAnswer) (bool, error)
 }
 type QueryResolver interface {
-	Users(ctx context.Context, limit *int, offset *int) ([]*model.User, error)
+	Users(ctx context.Context, limit *int, offset *int) (*model.UsersOutput, error)
 	FindUser(ctx context.Context, id string) (*model.User, error)
 	ConfirmToken(ctx context.Context) (*model.User, error)
-	Questions(ctx context.Context, limit *int, offset *int) ([]*model.Question, error)
+	Questions(ctx context.Context, limit *int, offset *int) (*model.QuestionsOutput, error)
 	FindQuestion(ctx context.Context, id string, userID *string) (*model.Question, error)
 	Answers(ctx context.Context, limit *int, offset *int) ([]*model.Answer, error)
 	FindAnswer(ctx context.Context, id string) (*model.Answer, error)
@@ -196,6 +211,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Answer.User(childComplexity), true
+
+	case "AnswersOutput.length":
+		if e.complexity.AnswersOutput.Length == nil {
+			break
+		}
+
+		return e.complexity.AnswersOutput.Length(childComplexity), true
+
+	case "AnswersOutput.questions":
+		if e.complexity.AnswersOutput.Questions == nil {
+			break
+		}
+
+		return e.complexity.AnswersOutput.Questions(childComplexity), true
 
 	case "Choice.answered":
 		if e.complexity.Choice.Answered == nil {
@@ -514,6 +543,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Question.User(childComplexity), true
 
+	case "QuestionsOutput.length":
+		if e.complexity.QuestionsOutput.Length == nil {
+			break
+		}
+
+		return e.complexity.QuestionsOutput.Length(childComplexity), true
+
+	case "QuestionsOutput.questions":
+		if e.complexity.QuestionsOutput.Questions == nil {
+			break
+		}
+
+		return e.complexity.QuestionsOutput.Questions(childComplexity), true
+
 	case "User.answerCount":
 		if e.complexity.User.AnswerCount == nil {
 			break
@@ -597,6 +640,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.User.Username(childComplexity), true
+
+	case "UsersOutput.length":
+		if e.complexity.UsersOutput.Length == nil {
+			break
+		}
+
+		return e.complexity.UsersOutput.Length(childComplexity), true
+
+	case "UsersOutput.users":
+		if e.complexity.UsersOutput.Users == nil {
+			break
+		}
+
+		return e.complexity.UsersOutput.Users(childComplexity), true
 
 	}
 	return 0, false
@@ -723,11 +780,26 @@ input LoginInput {
   password: String!
 }
 
+type UsersOutput {
+  length: Int!
+  users: [User!]!
+}
+
+type QuestionsOutput {
+  length: Int!
+  questions: [Question!]!
+}
+
+type AnswersOutput {
+  length: Int!
+  questions: [Question!]!
+}
+
 type Query {
-  users(limit: Int = 12, offset: Int = 0): [User!]!
+  users(limit: Int = 12, offset: Int = 0): UsersOutput!
   findUser(id: ID!): User!
   confirmToken: User!
-  questions(limit: Int = 12, offset: Int = 0): [Question!]!
+  questions(limit: Int = 12, offset: Int = 0): QuestionsOutput!
   findQuestion(id: ID!, userId: ID): Question!
   answers(limit: Int = 12, offset: Int = 0): [Answer!]!
   findAnswer(id: ID!): Answer!
@@ -1311,6 +1383,76 @@ func (ec *executionContext) _Answer_updated_at(ctx context.Context, field graphq
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _AnswersOutput_length(ctx context.Context, field graphql.CollectedField, obj *model.AnswersOutput) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AnswersOutput",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Length, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AnswersOutput_questions(ctx context.Context, field graphql.CollectedField, obj *model.AnswersOutput) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AnswersOutput",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Questions, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.Question)
+	fc.Result = res
+	return ec.marshalNQuestion2ᚕᚖfaves4ᚋgraphᚋmodelᚐQuestionᚄ(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Choice_id(ctx context.Context, field graphql.CollectedField, obj *model.Choice) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -1817,9 +1959,9 @@ func (ec *executionContext) _Query_users(ctx context.Context, field graphql.Coll
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*model.User)
+	res := resTmp.(*model.UsersOutput)
 	fc.Result = res
-	return ec.marshalNUser2ᚕᚖfaves4ᚋgraphᚋmodelᚐUserᚄ(ctx, field.Selections, res)
+	return ec.marshalNUsersOutput2ᚖfaves4ᚋgraphᚋmodelᚐUsersOutput(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_findUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1936,9 +2078,9 @@ func (ec *executionContext) _Query_questions(ctx context.Context, field graphql.
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*model.Question)
+	res := resTmp.(*model.QuestionsOutput)
 	fc.Result = res
-	return ec.marshalNQuestion2ᚕᚖfaves4ᚋgraphᚋmodelᚐQuestionᚄ(ctx, field.Selections, res)
+	return ec.marshalNQuestionsOutput2ᚖfaves4ᚋgraphᚋmodelᚐQuestionsOutput(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_findQuestion(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2706,6 +2848,76 @@ func (ec *executionContext) _Question_updated_at(ctx context.Context, field grap
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _QuestionsOutput_length(ctx context.Context, field graphql.CollectedField, obj *model.QuestionsOutput) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "QuestionsOutput",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Length, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _QuestionsOutput_questions(ctx context.Context, field graphql.CollectedField, obj *model.QuestionsOutput) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "QuestionsOutput",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Questions, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.Question)
+	fc.Result = res
+	return ec.marshalNQuestion2ᚕᚖfaves4ᚋgraphᚋmodelᚐQuestionᚄ(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _User_id(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -3094,6 +3306,76 @@ func (ec *executionContext) _User_updated_at(ctx context.Context, field graphql.
 	res := resTmp.(*string)
 	fc.Result = res
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UsersOutput_length(ctx context.Context, field graphql.CollectedField, obj *model.UsersOutput) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UsersOutput",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Length, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UsersOutput_users(ctx context.Context, field graphql.CollectedField, obj *model.UsersOutput) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UsersOutput",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Users, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.User)
+	fc.Result = res
+	return ec.marshalNUser2ᚕᚖfaves4ᚋgraphᚋmodelᚐUserᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Directive_name(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {
@@ -4648,6 +4930,38 @@ func (ec *executionContext) _Answer(ctx context.Context, sel ast.SelectionSet, o
 	return out
 }
 
+var answersOutputImplementors = []string{"AnswersOutput"}
+
+func (ec *executionContext) _AnswersOutput(ctx context.Context, sel ast.SelectionSet, obj *model.AnswersOutput) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, answersOutputImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("AnswersOutput")
+		case "length":
+			out.Values[i] = ec._AnswersOutput_length(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "questions":
+			out.Values[i] = ec._AnswersOutput_questions(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var choiceImplementors = []string{"Choice"}
 
 func (ec *executionContext) _Choice(ctx context.Context, sel ast.SelectionSet, obj *model.Choice) graphql.Marshaler {
@@ -4964,6 +5278,38 @@ func (ec *executionContext) _Question(ctx context.Context, sel ast.SelectionSet,
 	return out
 }
 
+var questionsOutputImplementors = []string{"QuestionsOutput"}
+
+func (ec *executionContext) _QuestionsOutput(ctx context.Context, sel ast.SelectionSet, obj *model.QuestionsOutput) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, questionsOutputImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("QuestionsOutput")
+		case "length":
+			out.Values[i] = ec._QuestionsOutput_length(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "questions":
+			out.Values[i] = ec._QuestionsOutput_questions(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var userImplementors = []string{"User", "Node"}
 
 func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj *model.User) graphql.Marshaler {
@@ -5005,6 +5351,38 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 			out.Values[i] = ec._User_created_at(ctx, field, obj)
 		case "updated_at":
 			out.Values[i] = ec._User_updated_at(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var usersOutputImplementors = []string{"UsersOutput"}
+
+func (ec *executionContext) _UsersOutput(ctx context.Context, sel ast.SelectionSet, obj *model.UsersOutput) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, usersOutputImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UsersOutput")
+		case "length":
+			out.Values[i] = ec._UsersOutput_length(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "users":
+			out.Values[i] = ec._UsersOutput_users(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -5477,6 +5855,20 @@ func (ec *executionContext) marshalNQuestion2ᚖfaves4ᚋgraphᚋmodelᚐQuestio
 	return ec._Question(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNQuestionsOutput2faves4ᚋgraphᚋmodelᚐQuestionsOutput(ctx context.Context, sel ast.SelectionSet, v model.QuestionsOutput) graphql.Marshaler {
+	return ec._QuestionsOutput(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNQuestionsOutput2ᚖfaves4ᚋgraphᚋmodelᚐQuestionsOutput(ctx context.Context, sel ast.SelectionSet, v *model.QuestionsOutput) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._QuestionsOutput(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {
 	res, err := graphql.UnmarshalString(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -5541,6 +5933,20 @@ func (ec *executionContext) marshalNUser2ᚖfaves4ᚋgraphᚋmodelᚐUser(ctx co
 		return graphql.Null
 	}
 	return ec._User(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNUsersOutput2faves4ᚋgraphᚋmodelᚐUsersOutput(ctx context.Context, sel ast.SelectionSet, v model.UsersOutput) graphql.Marshaler {
+	return ec._UsersOutput(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNUsersOutput2ᚖfaves4ᚋgraphᚋmodelᚐUsersOutput(ctx context.Context, sel ast.SelectionSet, v *model.UsersOutput) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._UsersOutput(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalN__Directive2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐDirective(ctx context.Context, sel ast.SelectionSet, v introspection.Directive) graphql.Marshaler {

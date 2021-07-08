@@ -39,7 +39,7 @@ func (r *mutationResolver) EditPassword(ctx context.Context, id string, newPassw
 	return true, nil
 }
 
-func (r *queryResolver) Users(ctx context.Context, limit *int, offset *int) ([]*model.User, error) {
+func (r *queryResolver) Users(ctx context.Context, limit *int, offset *int) (*model.UsersOutput, error) {
 	l, o := 12, 0
 	if limit != nil {
 		l = *limit
@@ -47,7 +47,12 @@ func (r *queryResolver) Users(ctx context.Context, limit *int, offset *int) ([]*
 	if offset != nil {
 		o = *offset
 	}
-	return r.Repository.FetchUsers(ctx, l, o)
+	us, err := r.Repository.FetchUsers(ctx, l, o)
+	if err != nil { return nil, err }
+	return &model.UsersOutput{
+		Users: us,
+		Length: r.Repository.GetAllUsersCount(ctx),
+	}, nil
 }
 
 func (r *queryResolver) FindUser(ctx context.Context, id string) (*model.User, error) {

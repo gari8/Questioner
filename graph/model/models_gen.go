@@ -23,6 +23,11 @@ type Answer struct {
 	UpdatedAt *string   `json:"updated_at"`
 }
 
+type AnswersOutput struct {
+	Length    int         `json:"length"`
+	Questions []*Question `json:"questions"`
+}
+
 type Choice struct {
 	ID       int       `json:"id"`
 	Content  string    `json:"content"`
@@ -108,6 +113,11 @@ type Question struct {
 
 func (Question) IsNode() {}
 
+type QuestionsOutput struct {
+	Length    int         `json:"length"`
+	Questions []*Question `json:"questions"`
+}
+
 type User struct {
 	ID            string      `json:"id"`
 	Username      string      `json:"username"`
@@ -124,6 +134,11 @@ type User struct {
 }
 
 func (User) IsNode() {}
+
+type UsersOutput struct {
+	Length int     `json:"length"`
+	Users  []*User `json:"users"`
+}
 
 type AnswerType string
 

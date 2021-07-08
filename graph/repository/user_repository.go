@@ -6,7 +6,6 @@ import (
 	"faves4/ent/user"
 	"faves4/graph/model"
 	"faves4/infrastructure/lib/tools"
-	"fmt"
 	"time"
 )
 
@@ -22,6 +21,7 @@ type (
 		UpdatePassword(ctx context.Context, id string, password string) (*model.User, error)
 		FetchUsers(ctx context.Context, limit int, offset int) ([]*model.User, error)
 		ConfirmPassword(ctx context.Context, id string, password string) bool
+		GetAllUsersCount(ctx context.Context) int
 	}
 )
 
@@ -58,18 +58,21 @@ func (u *userRepository) FetchUser(ctx context.Context, id *string, email *strin
 			Where(user.IDEQ(*id)).WithQuestions(func(q *ent.QuestionQuery) {
 			q.WithAnswers()
 			q.WithChoices()
-		}).Only(ctx)
+		}).WithAnswers().WithChoiceanswers().Only(ctx)
 	}
 	if email != nil {
 		ut, err = u.User.Query().
 			Where(user.EmailEQ(*email)).WithQuestions(func(q *ent.QuestionQuery) {
 			q.WithAnswers()
 			q.WithChoices()
-		}).Only(ctx)
+		}).WithAnswers().WithChoiceanswers().Only(ctx)
 	}
-	fmt.Printf("%v", ut)
 	if err != nil { return nil, err }
 	us := tools.CastUser(ut)
+	al := len(ut.Edges.Answers) + len(ut.Edges.Choiceanswers)
+	ql := len(ut.Edges.Questions)
+	us.AnswerCount = &al
+	us.QuestionCount = &ql
 	return us, nil
 }
 
@@ -102,11 +105,16 @@ func (u *userRepository) NewSession(ctx context.Context, input model.LoginInput)
 }
 
 func (u *userRepository) FetchUsers(ctx context.Context, limit int, offset int) ([]*model.User, error) {
-	ul, err := u.User.Query().Limit(limit).Offset(offset).All(ctx)
+	ul, err := u.User.Query().WithAnswers().WithQuestions().WithChoiceanswers().Limit(limit).Offset(offset).All(ctx)
 	if err != nil { return nil, err }
 	var us []*model.User
 	for _, ut := range ul {
-		us = append(us, tools.CastUser(ut))
+		um := tools.CastUser(ut)
+		al := len(ut.Edges.Answers) + len(ut.Edges.Choiceanswers)
+		ql := len(ut.Edges.Questions)
+		um.AnswerCount = &al
+		um.QuestionCount = &ql
+		us = append(us, um)
 	}
 	return us, nil
 }
@@ -118,4 +126,8 @@ func (u *userRepository) ConfirmPassword(ctx context.Context, id string, passwor
 	}
 	if ok := tools.CompareHashAndPlane(us.Password, password); ok { return true }
 	return false
+}
+
+func (u *userRepository) GetAllUsersCount(ctx context.Context) int {
+	return u.User.Query().CountX(ctx)
 }

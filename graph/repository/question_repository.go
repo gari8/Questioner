@@ -17,6 +17,7 @@ type (
 		FetchQuestion(ctx context.Context, id string, userId *string) (*model.Question, error)
 		FetchQuestions(ctx context.Context, limit int, offset int) ([]*model.Question, error)
 		NewQuestion(ctx context.Context, input model.NewQuestion) (*model.Question, error)
+		GetAllQuestionsCount(ctx context.Context) int
 	}
 )
 
@@ -113,4 +114,8 @@ func (q *questionRepository) FetchQuestions(ctx context.Context, limit int, offs
 		qs = append(qs, q)
 	}
 	return qs, nil
+}
+
+func (q *questionRepository) GetAllQuestionsCount(ctx context.Context) int {
+	return q.Question.Query().CountX(ctx)
 }
