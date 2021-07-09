@@ -52,10 +52,12 @@ func (u *userRepository) NewUser(ctx context.Context, input model.NewUser) (*mod
 
 func (u *userRepository) FetchUser(ctx context.Context, id *string, email *string) (*model.User, error) {
 	var ut *ent.User
+	var uqs []*model.Question
 	var err error
 	if id != nil {
 		ut, err = u.User.Query().
 			Where(user.IDEQ(*id)).WithQuestions(func(q *ent.QuestionQuery) {
+			q.WithOwner()
 			q.WithAnswers()
 			q.WithChoices()
 		}).WithAnswers().WithChoiceanswers().Only(ctx)
@@ -63,9 +65,19 @@ func (u *userRepository) FetchUser(ctx context.Context, id *string, email *strin
 	if email != nil {
 		ut, err = u.User.Query().
 			Where(user.EmailEQ(*email)).WithQuestions(func(q *ent.QuestionQuery) {
+			q.WithOwner()
 			q.WithAnswers()
 			q.WithChoices()
 		}).WithAnswers().WithChoiceanswers().Only(ctx)
+	}
+	if ut != nil {
+		for _, qType := range ut.Edges.Questions {
+			qs, _ := tools.CastQuestion(ctx, qType)
+			if qs != nil {
+				qs.User = tools.CastUser(qType.Edges.Owner)
+				uqs = append(uqs, qs)
+			}
+		}
 	}
 	if err != nil { return nil, err }
 	us := tools.CastUser(ut)
@@ -73,6 +85,7 @@ func (u *userRepository) FetchUser(ctx context.Context, id *string, email *strin
 	ql := len(ut.Edges.Questions)
 	us.AnswerCount = &al
 	us.QuestionCount = &ql
+	us.Questions = uqs
 	return us, nil
 }
 
