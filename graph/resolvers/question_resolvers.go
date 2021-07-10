@@ -14,7 +14,7 @@ func (r *mutationResolver) EditQuestion(ctx context.Context, input model.EditQue
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *queryResolver) Questions(ctx context.Context, limit *int, offset *int) (*model.QuestionsOutput, error) {
+func (r *queryResolver) Questions(ctx context.Context, limit *int, offset *int, userID *string) (*model.QuestionsOutput, error) {
 	l, o := 12, 0
 	if limit != nil {
 		l = *limit

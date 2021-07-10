@@ -55,8 +55,8 @@ type ComplexityRoot struct {
 	}
 
 	AnswersOutput struct {
-		Length    func(childComplexity int) int
-		Questions func(childComplexity int) int
+		Answers func(childComplexity int) int
+		Length  func(childComplexity int) int
 	}
 
 	Choice struct {
@@ -83,7 +83,8 @@ type ComplexityRoot struct {
 		FindAnswer   func(childComplexity int, id string) int
 		FindQuestion func(childComplexity int, id string, userID *string) int
 		FindUser     func(childComplexity int, id string) int
-		Questions    func(childComplexity int, limit *int, offset *int) int
+		Questions    func(childComplexity int, limit *int, offset *int, userID *string) int
+		Search       func(childComplexity int, keyword string) int
 		Users        func(childComplexity int, limit *int, offset *int) int
 	}
 
@@ -110,6 +111,11 @@ type ComplexityRoot struct {
 	QuestionsOutput struct {
 		Length    func(childComplexity int) int
 		Questions func(childComplexity int) int
+	}
+
+	SearchOutput struct {
+		Questions func(childComplexity int) int
+		Users     func(childComplexity int) int
 	}
 
 	User struct {
@@ -146,10 +152,11 @@ type QueryResolver interface {
 	Users(ctx context.Context, limit *int, offset *int) (*model.UsersOutput, error)
 	FindUser(ctx context.Context, id string) (*model.User, error)
 	ConfirmToken(ctx context.Context) (*model.User, error)
-	Questions(ctx context.Context, limit *int, offset *int) (*model.QuestionsOutput, error)
+	Questions(ctx context.Context, limit *int, offset *int, userID *string) (*model.QuestionsOutput, error)
 	FindQuestion(ctx context.Context, id string, userID *string) (*model.Question, error)
 	Answers(ctx context.Context, limit *int, offset *int) ([]*model.Answer, error)
 	FindAnswer(ctx context.Context, id string) (*model.Answer, error)
+	Search(ctx context.Context, keyword string) (*model.SearchOutput, error)
 }
 type DirectiveResolver interface {
 	IsRepeatable(ctx context.Context, obj *introspection.Directive) (bool, error)
@@ -212,19 +219,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Answer.User(childComplexity), true
 
+	case "AnswersOutput.answers":
+		if e.complexity.AnswersOutput.Answers == nil {
+			break
+		}
+
+		return e.complexity.AnswersOutput.Answers(childComplexity), true
+
 	case "AnswersOutput.length":
 		if e.complexity.AnswersOutput.Length == nil {
 			break
 		}
 
 		return e.complexity.AnswersOutput.Length(childComplexity), true
-
-	case "AnswersOutput.questions":
-		if e.complexity.AnswersOutput.Questions == nil {
-			break
-		}
-
-		return e.complexity.AnswersOutput.Questions(childComplexity), true
 
 	case "Choice.answered":
 		if e.complexity.Choice.Answered == nil {
@@ -410,7 +417,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Questions(childComplexity, args["limit"].(*int), args["offset"].(*int)), true
+		return e.complexity.Query.Questions(childComplexity, args["limit"].(*int), args["offset"].(*int), args["userId"].(*string)), true
+
+	case "Query.search":
+		if e.complexity.Query.Search == nil {
+			break
+		}
+
+		args, err := ec.field_Query_search_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Search(childComplexity, args["keyword"].(string)), true
 
 	case "Query.users":
 		if e.complexity.Query.Users == nil {
@@ -556,6 +575,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.QuestionsOutput.Questions(childComplexity), true
+
+	case "SearchOutput.questions":
+		if e.complexity.SearchOutput.Questions == nil {
+			break
+		}
+
+		return e.complexity.SearchOutput.Questions(childComplexity), true
+
+	case "SearchOutput.users":
+		if e.complexity.SearchOutput.Users == nil {
+			break
+		}
+
+		return e.complexity.SearchOutput.Users(childComplexity), true
 
 	case "User.answerCount":
 		if e.complexity.User.AnswerCount == nil {
@@ -792,6 +825,11 @@ type QuestionsOutput {
 
 type AnswersOutput {
   length: Int!
+  answers: [Answer!]!
+}
+
+type SearchOutput {
+  users: [User!]!
   questions: [Question!]!
 }
 
@@ -799,10 +837,11 @@ type Query {
   users(limit: Int = 12, offset: Int = 0): UsersOutput!
   findUser(id: ID!): User!
   confirmToken: User!
-  questions(limit: Int = 12, offset: Int = 0): QuestionsOutput!
+  questions(limit: Int = 12, offset: Int = 0, userId: ID): QuestionsOutput!
   findQuestion(id: ID!, userId: ID): Question!
   answers(limit: Int = 12, offset: Int = 0): [Answer!]!
   findAnswer(id: ID!): Answer!
+  search(keyword: String!): SearchOutput!
 }
 
 input NewUser {
@@ -1117,6 +1156,30 @@ func (ec *executionContext) field_Query_questions_args(ctx context.Context, rawA
 		}
 	}
 	args["offset"] = arg1
+	var arg2 *string
+	if tmp, ok := rawArgs["userId"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userId"))
+		arg2, err = ec.unmarshalOID2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["userId"] = arg2
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_search_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["keyword"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("keyword"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["keyword"] = arg0
 	return args, nil
 }
 
@@ -1418,7 +1481,7 @@ func (ec *executionContext) _AnswersOutput_length(ctx context.Context, field gra
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AnswersOutput_questions(ctx context.Context, field graphql.CollectedField, obj *model.AnswersOutput) (ret graphql.Marshaler) {
+func (ec *executionContext) _AnswersOutput_answers(ctx context.Context, field graphql.CollectedField, obj *model.AnswersOutput) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1436,7 +1499,7 @@ func (ec *executionContext) _AnswersOutput_questions(ctx context.Context, field 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Questions, nil
+		return obj.Answers, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1448,9 +1511,9 @@ func (ec *executionContext) _AnswersOutput_questions(ctx context.Context, field 
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*model.Question)
+	res := resTmp.([]*model.Answer)
 	fc.Result = res
-	return ec.marshalNQuestion2ᚕᚖfaves4ᚋgraphᚋmodelᚐQuestionᚄ(ctx, field.Selections, res)
+	return ec.marshalNAnswer2ᚕᚖfaves4ᚋgraphᚋmodelᚐAnswerᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Choice_id(ctx context.Context, field graphql.CollectedField, obj *model.Choice) (ret graphql.Marshaler) {
@@ -2066,7 +2129,7 @@ func (ec *executionContext) _Query_questions(ctx context.Context, field graphql.
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Questions(rctx, args["limit"].(*int), args["offset"].(*int))
+		return ec.resolvers.Query().Questions(rctx, args["limit"].(*int), args["offset"].(*int), args["userId"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2207,6 +2270,48 @@ func (ec *executionContext) _Query_findAnswer(ctx context.Context, field graphql
 	res := resTmp.(*model.Answer)
 	fc.Result = res
 	return ec.marshalNAnswer2ᚖfaves4ᚋgraphᚋmodelᚐAnswer(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_search(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_search_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Search(rctx, args["keyword"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.SearchOutput)
+	fc.Result = res
+	return ec.marshalNSearchOutput2ᚖfaves4ᚋgraphᚋmodelᚐSearchOutput(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2892,6 +2997,76 @@ func (ec *executionContext) _QuestionsOutput_questions(ctx context.Context, fiel
 	}()
 	fc := &graphql.FieldContext{
 		Object:     "QuestionsOutput",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Questions, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.Question)
+	fc.Result = res
+	return ec.marshalNQuestion2ᚕᚖfaves4ᚋgraphᚋmodelᚐQuestionᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SearchOutput_users(ctx context.Context, field graphql.CollectedField, obj *model.SearchOutput) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SearchOutput",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Users, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.User)
+	fc.Result = res
+	return ec.marshalNUser2ᚕᚖfaves4ᚋgraphᚋmodelᚐUserᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SearchOutput_questions(ctx context.Context, field graphql.CollectedField, obj *model.SearchOutput) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SearchOutput",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -4946,8 +5121,8 @@ func (ec *executionContext) _AnswersOutput(ctx context.Context, sel ast.Selectio
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "questions":
-			out.Values[i] = ec._AnswersOutput_questions(ctx, field, obj)
+		case "answers":
+			out.Values[i] = ec._AnswersOutput_answers(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -5183,6 +5358,20 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				}
 				return res
 			})
+		case "search":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_search(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "__type":
 			out.Values[i] = ec._Query___type(ctx, field)
 		case "__schema":
@@ -5296,6 +5485,38 @@ func (ec *executionContext) _QuestionsOutput(ctx context.Context, sel ast.Select
 			}
 		case "questions":
 			out.Values[i] = ec._QuestionsOutput_questions(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var searchOutputImplementors = []string{"SearchOutput"}
+
+func (ec *executionContext) _SearchOutput(ctx context.Context, sel ast.SelectionSet, obj *model.SearchOutput) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, searchOutputImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SearchOutput")
+		case "users":
+			out.Values[i] = ec._SearchOutput_users(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "questions":
+			out.Values[i] = ec._SearchOutput_questions(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -5867,6 +6088,20 @@ func (ec *executionContext) marshalNQuestionsOutput2ᚖfaves4ᚋgraphᚋmodelᚐ
 		return graphql.Null
 	}
 	return ec._QuestionsOutput(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNSearchOutput2faves4ᚋgraphᚋmodelᚐSearchOutput(ctx context.Context, sel ast.SelectionSet, v model.SearchOutput) graphql.Marshaler {
+	return ec._SearchOutput(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNSearchOutput2ᚖfaves4ᚋgraphᚋmodelᚐSearchOutput(ctx context.Context, sel ast.SelectionSet, v *model.SearchOutput) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._SearchOutput(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {

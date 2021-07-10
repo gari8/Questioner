@@ -24,8 +24,8 @@ type Answer struct {
 }
 
 type AnswersOutput struct {
-	Length    int         `json:"length"`
-	Questions []*Question `json:"questions"`
+	Length  int       `json:"length"`
+	Answers []*Answer `json:"answers"`
 }
 
 type Choice struct {
@@ -115,6 +115,11 @@ func (Question) IsNode() {}
 
 type QuestionsOutput struct {
 	Length    int         `json:"length"`
+	Questions []*Question `json:"questions"`
+}
+
+type SearchOutput struct {
+	Users     []*User     `json:"users"`
 	Questions []*Question `json:"questions"`
 }
 
