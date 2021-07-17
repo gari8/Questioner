@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"faves4/ent"
+	"faves4/ent/question"
 	"faves4/ent/user"
 	"faves4/graph/model"
 	"faves4/infrastructure/lib/tools"
@@ -60,6 +61,7 @@ func (u *userRepository) FetchUser(ctx context.Context, id *string, email *strin
 			q.WithOwner()
 			q.WithAnswers()
 			q.WithChoices()
+			q.Order(ent.Desc(question.FieldCratedAt))
 		}).WithAnswers().WithChoiceanswers().Only(ctx)
 	}
 	if email != nil {

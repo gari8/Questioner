@@ -76,6 +76,8 @@ func (q *questionRepository) FetchQuestion(ctx context.Context, id string, userI
 			qs.Answered = tools.ContainsUserIdInAnswers(answers, *userId)
 		}
 	}
+	qs.Enabled = true
+	qs.Published = true
 	return qs, nil
 }
 
