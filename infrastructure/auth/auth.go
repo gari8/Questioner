@@ -2,8 +2,7 @@ package auth
 
 import (
 	"context"
-	"faves4/graph/model"
-	"faves4/interactor"
+	"github.com/gari8/Questioner/domain"
 	"net/http"
 )
 
@@ -23,8 +22,8 @@ func Middleware(ctx context.Context, repository interactor.Repository) func(http
 	}
 }
 
-func ForContext(ctx context.Context) *model.User {
+func ForContext(ctx context.Context) *domain.User {
 	//raw, _ := ctx.Value(userCtxKey).(*model.User)
-	raw := &model.User{}
+	raw := &domain.User{}
 	return raw
 }

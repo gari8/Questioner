@@ -1,0 +1,28 @@
+type User {
+    id: ID!
+    username: String!
+    icon: String!
+    email: String!
+    description: String!
+    questionCount: Int!
+    questions: [Question!]
+    created_at: String!
+    updated_at: String!
+    pageInfo: PageInfo!
+}
+
+input EditUserInput {
+    username: String
+    icon: String
+    description: String
+}
+
+extend type Query {
+    users(keyword: String, first: Int, offset: Int): [User!]!
+    userByID(id: ID!): User!
+    userByEmail(email: String!): User!
+}
+
+extend type Mutation {
+    editUser(editUserInput: EditUserInput): User!
+}

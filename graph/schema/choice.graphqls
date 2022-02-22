@@ -1,0 +1,15 @@
+type Choice {
+    id: ID!
+    text: String!
+    question: Question!
+    isAnswer: Boolean!
+}
+
+input NewChoice {
+    text: String!
+    isAnswer: Boolean!
+}
+
+extend type Query {
+    choiceByID(id: ID!): Choice!
+}

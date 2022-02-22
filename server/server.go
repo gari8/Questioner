@@ -2,19 +2,18 @@ package server
 
 import (
 	"context"
-	"faves4/graph/generated"
-	"faves4/graph/resolvers"
-	"faves4/infrastructure/auth"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/gari8/Questioner/graph/generated"
+	"github.com/gari8/Questioner/infrastructure/auth"
 	"github.com/go-chi/chi"
 	"github.com/gorilla/websocket"
 	"github.com/rs/cors"
 	"net/http"
 )
 
-func (g *graphQLServer)Serve(ctx context.Context, usePlayGround bool) (chi.Router, error){
+func (g *graphQLServer) Serve(ctx context.Context, usePlayGround bool) (chi.Router, error) {
 	router := chi.NewRouter()
 
 	acceptOrigins := []string{
@@ -50,7 +49,6 @@ func (g *graphQLServer)Serve(ctx context.Context, usePlayGround bool) (chi.Route
 	srv.AddTransport(transport.GET{})
 	srv.AddTransport(transport.POST{})
 	srv.AddTransport(transport.MultipartForm{})
-
 
 	router.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	router.Handle("/query", srv)

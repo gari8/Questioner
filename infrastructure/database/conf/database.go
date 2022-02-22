@@ -1,8 +1,7 @@
 package conf
 
 import (
-	"faves4/ent"
-
+	"entgo.io/ent/entc/integration/ent"
 	_ "github.com/lib/pq"
 
 	"os"

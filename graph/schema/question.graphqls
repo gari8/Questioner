@@ -1,0 +1,46 @@
+type Question {
+    id: ID!
+    title: String!
+    content: String!
+    textAfterAnswered: String!
+    enabled: Boolean!
+    choices: [Choice!]
+    user: User!
+    correctRate: Int!
+    created_at: String!
+    updated_at: String!
+    pageInfo: PageInfo!
+}
+
+type PageInfo {
+    endCursor: Int!
+    hasNextPage: Boolean!
+}
+
+input NewQuestionInput {
+    id: ID!
+    title: String!
+    content: String!
+    enabled: Boolean!
+    userId: ID!
+    choices: [NewChoice!]!
+    textAfterAnswered: String
+}
+
+input EditQuestionInput {
+    title: String
+    content: String
+    enabled: Boolean
+    textAfterAnswered: String
+    choices: [NewChoice!]
+}
+
+extend type Query {
+    questions(keyword: String, first: Int, offset: Int): [Question!]!
+    questionByID(id: ID!): Question!
+}
+
+extend type Mutation {
+    createQuestion(newQuestionInput: NewQuestionInput): Question!
+    editQuestion(editQuestionInput: EditQuestionInput): Question!
+}
